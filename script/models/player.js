@@ -130,8 +130,7 @@ Player.prototype.fastforward = function() {
 	var video = document.getElementById("video");
 	video.playbackRate += .5;
 	
-	message.show({
-		messageType: message.notice,			
+	playerpopup.show({
 		duration: 1000,
 		text: "Fast Forward " + video.playbackRate + "x"
 	});	
@@ -142,8 +141,7 @@ Player.prototype.rewind = function() {
 	if (video.playbackRate > 0)
 		video.playbackRate = 0;
 	video.playbackRate -= .5;
-	message.show({
-		messageType: message.notice,
+	playerpopup.show({
 		duration: 1000,
 		text: "Rewind " + video.playbackRate* -1 + "x"
 	});	

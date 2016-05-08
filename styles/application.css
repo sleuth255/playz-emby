@@ -366,6 +366,21 @@ input:hover {
 	opacity: 0.9; 
 }
 
+.playerpopup {
+	position: absolute;
+	right: 200px;
+	top: 200px;
+	display: block;
+	font-size: 40px;
+	color: #fff;
+	padding: 20px 10px; 
+	border-radius: 22px;	
+	background: #000;	
+	text-align: center;		
+	border: 2px solid #f00;
+	box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);	
+}
+
 .message {
 	position: absolute;
 	left: 500px;
