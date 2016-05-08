@@ -1,0 +1,9 @@
+{
+    "vendor": "The Paradigm Grid",
+    "icon": "images/embyWebOSIcon.png",
+    "main": "index.html",
+    "id": "theparadigmgrid.emby.playz",
+    "title": "Emby",
+    "type": "web",
+    "version": "0.0.1"
+}
