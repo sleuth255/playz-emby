@@ -116,6 +116,11 @@ Player.prototype.skip = function() {
 	video.currentTime += 60;
 };
 
+Player.prototype.backskip = function() {
+	var video = document.getElementById("video");
+	video.currentTime -= 30;
+};
+
 Player.prototype.play = function() {
 	var video = document.getElementById("video");
 	video.play();
