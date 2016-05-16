@@ -34,6 +34,7 @@
 			var summary = new CollectionSummary();	
 			var item = new Item();
 			var player = new Player();
+			var controlsVisible = false;
 									
 			dom.addClass("body", device.bodyClass);
 			
@@ -97,6 +98,7 @@
 			});						
 
 			dom.on(document, "playItem", function(event) {
+				controlsVisible = false;
 				player.load(event.detail);
 			});	
 
@@ -164,15 +166,18 @@
 
 				if (dom.exists("#player")) {
 					switch (event.which) {
-				        case keys.KEY_YELLOW:
-				        	playerpopup.show({
-				        		duration: 1000,
-				        		text: "Test Message"
-				        	});	
+				        case keys.KEY_GREEN:
+				        	if (controlsVisible)
+				        	{
+				        	   player.hideControls();
+				        	   controlsVisible = false;
+				        	}
+				        	else
+				        	{
+				        		player.showControls({persist: true});
+				        		controlsVisible = true;
+				        	}
 					        return;
-					    case keys.KEY_GREEN:
-						    player.close();
-						    return;
 					    case keys.KEY_RIGHT:
 						    player.skip();
 						    return;

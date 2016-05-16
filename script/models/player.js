@@ -21,9 +21,29 @@ Player.prototype.load = function(data, settings) {
 			childNodes: [{
 				nodeName: "video",
 				className: "video",
-				id: "video",
-				controls: "controls"		
-			}]
+				id: "video"
+			    },{
+					nodeName: "div",
+					id: "video-controls",
+					className: "video-controls",
+					childNodes: [{
+					    nodeName: "button",
+					    className: "play",
+					    id: "play-pause",
+					    text: "Pause"
+				    }, {
+						nodeName: "button",
+						className: "stop",
+						id: "stop-exit",
+						text: "Stop"
+				    }, {
+					    nodeName: "input",
+					    "type": "range",
+					    className: "seek-bar",
+					    id: "seek-bar",
+					    "value": "0",
+				    }]
+			    }]
 		});	
 
 		dom.append("#video", {
@@ -43,8 +63,11 @@ Player.prototype.load = function(data, settings) {
 			"type": mime.lookup("m3u8")
 		});	
 
-			
 		var video = document.getElementById("video");		
+		var playButton = document.getElementById("play-pause");
+		var stopButton = document.getElementById("stop-exit");
+		var seekBar = document.getElementById("seek-bar");
+
 		
 		video.onplay = function() {
 			time = Math.floor(event.target.currentTime);	
@@ -80,8 +103,12 @@ Player.prototype.load = function(data, settings) {
 					}
 				});
 					
-				console.log("ReportPlaybackProgress - " + time + " : " + ticks);
+
 			}
+			// Update the slider value
+			var value = (100 / video.duration) * video.currentTime;
+			seekBar.value = value;
+			console.log("ReportPlaybackProgress - " + time + " : " + ticks);
 		};
 
 		video.onpause = function() {
@@ -103,6 +130,57 @@ Player.prototype.load = function(data, settings) {
 			console.log("Play Paused - " + time + " : " + ticks);
 		};
 		
+		// Event listener for the play/pause button
+		playButton.addEventListener("click", function() {
+			if (video.paused == true) {
+				// Play the video
+				video.play();
+
+				// Update the button text to 'Pause'
+				playButton.innerHTML = "Pause";
+			} else {
+				// Pause the video
+				video.pause();
+
+				// Update the button text to 'Play '
+				playButton.innerHTML = "Play";
+			}
+		});
+
+		// Event listener for the stop button
+		stopButton.addEventListener("click", function() {
+			dom.remove("#player");	
+			dom.remove("#video-controls");
+		});
+
+		// Event listener for the seek bar
+		seekBar.addEventListener("change", function() {
+			// Calculate the new time
+			var time = video.duration * (seekBar.value / 100);
+
+			// Update the video time
+			video.currentTime = time;
+		});
+
+	
+		// Pause the video when the seek handle is being dragged
+		seekBar.addEventListener("mousedown", function() {
+			video.pause();
+		});
+
+		// Play the video when the seek handle is dropped
+		seekBar.addEventListener("mouseup", function() {
+			video.play();
+		});
+
+		video.addEventListener("timeupdate", function() {
+			// Calculate the slider value
+			var value = (100 / video.duration) * video.currentTime;
+
+			// Update the slider value
+			seekBar.value = value;
+		});
+
 		video.load();
 		video.play();			
 	}
@@ -110,6 +188,7 @@ Player.prototype.load = function(data, settings) {
 
 Player.prototype.close = function() {
 	dom.remove("#player");	
+	dom.remove("#video-controls");
 };
 Player.prototype.skip = function() {
 	var video = document.getElementById("video");
@@ -150,4 +229,18 @@ Player.prototype.rewind = function() {
 		duration: 1000,
 		text: "Rewind " + video.playbackRate* -1 + "x"
 	});	
+};
+Player.prototype.showControls = function(settings){
+	var duration = settings.duration || 3000;
+	var persist = settings.persist || false;
+
+	dom.show("#video-controls");
+	if (!persist)
+    	this.interval = window.setTimeout(function() {
+		   dom.hide("#video-controls");
+	    }, duration);
+
+};
+Player.prototype.hideControls = function(){
+	dom.hide("#video-controls");
 };
