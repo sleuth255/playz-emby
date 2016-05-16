@@ -37,6 +37,11 @@ Player.prototype.load = function(data, settings) {
 						id: "stop-exit",
 						text: "Stop"
 				    }, {
+						nodeName: "button",
+						className: "info-button",
+						id: "info-button",
+						text: "0:00/0:00"
+				    }, {
 					    nodeName: "input",
 					    "type": "range",
 					    className: "seek-bar",
@@ -66,6 +71,7 @@ Player.prototype.load = function(data, settings) {
 		var video = document.getElementById("video");		
 		var playButton = document.getElementById("play-pause");
 		var stopButton = document.getElementById("stop-exit");
+		var infoButton = document.getElementById("info-button");
 		var seekBar = document.getElementById("seek-bar");
 
 		
@@ -176,10 +182,31 @@ Player.prototype.load = function(data, settings) {
 		});
 
 		video.addEventListener("timeupdate", function() {
-			// Calculate the slider value
-			var value = (100 / video.duration) * video.currentTime;
 
-			// Update the slider value
+			// update the time/duration and slider values
+			var durmin = video.duration / 60;
+			durmin = Math.round(durmin);
+			var durhr = (durmin - (durmin % 60)) / 60;
+			durmin = durmin % 60;
+			
+			var curmin = video.currentTime / 60;
+			curmin = Math.round(curmin);
+			var curhr = (curmin - (curmin % 60)) / 60;
+			curmin = curmin % 60;
+/*
+			durmin = durmin.toPrecision(2);
+			durmin = durmin.toFixed(0);
+			durhr = durhr.toPrecision(1);
+			durhr = durhr.toFixed(0); 
+			curmin = curmin.toPrecision(2);
+			curmin = curmin.toFixed(0);
+			curhr = curhr.toPrecision(1);
+			curhr = curhr.toFixed(0); 
+*/			
+			var tmpstr = curhr.toPrecision(1)+":"+curmin.toPrecision(2)+"/"+durhr.toPrecision(1)+ ":"+durmin.toPrecision(2);
+			infoButton.innerHTML = tmpstr;
+
+			var value = (100 / video.duration) * video.currentTime;
 			seekBar.value = value;
 		});
 
