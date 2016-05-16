@@ -166,11 +166,13 @@ Player.prototype.load = function(data, settings) {
 		// Pause the video when the seek handle is being dragged
 		seekBar.addEventListener("mousedown", function() {
 			video.pause();
+			playButton.innerHTML = "Play";
 		});
 
 		// Play the video when the seek handle is dropped
 		seekBar.addEventListener("mouseup", function() {
 			video.play();
+			playButton.innerHTML = "Pause";
 		});
 
 		video.addEventListener("timeupdate", function() {
