@@ -185,25 +185,22 @@ Player.prototype.load = function(data, settings) {
 
 			// update the time/duration and slider values
 			var durmin = video.duration / 60;
-			durmin = Math.round(durmin);
 			var durhr = (durmin - (durmin % 60)) / 60;
 			durmin = durmin % 60;
 			
 			var curmin = video.currentTime / 60;
-			curmin = Math.round(curmin);
 			var curhr = (curmin - (curmin % 60)) / 60;
 			curmin = curmin % 60;
-/*
-			durmin = durmin.toPrecision(2);
+
 			durmin = durmin.toFixed(0);
-			durhr = durhr.toPrecision(1);
-			durhr = durhr.toFixed(0); 
-			curmin = curmin.toPrecision(2);
+			durhr = durhr.toFixed(0);
 			curmin = curmin.toFixed(0);
-			curhr = curhr.toPrecision(1);
-			curhr = curhr.toFixed(0); 
-*/			
-			var tmpstr = curhr.toPrecision(1)+":"+curmin.toPrecision(2)+"/"+durhr.toPrecision(1)+ ":"+durmin.toPrecision(2);
+			curhr = curhr.toFixed(0);
+			if (durmin.length < 2)
+				durmin = "0" + durmin;
+			if (curmin.length < 2)
+				curmin = "0" + curmin;
+			var tmpstr = curhr+":"+curmin+"/"+durhr+ ":"+durmin;
 			infoButton.innerHTML = tmpstr;
 
 			var value = (100 / video.duration) * video.currentTime;
