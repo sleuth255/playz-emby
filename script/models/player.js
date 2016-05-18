@@ -181,6 +181,10 @@ Player.prototype.load = function(data, settings) {
 			playButton.innerHTML = "Pause";
 		});
 
+		video.addEventListener("mousemove",function(){
+			self.showControls({duration: 6000});
+		});
+		
 		video.addEventListener("timeupdate", function() {
 
 			// update the time/duration and slider values
@@ -260,6 +264,7 @@ Player.prototype.showControls = function(settings){
 	var duration = settings.duration || 3000;
 	var persist = settings.persist || false;
 
+	window.clearTimeout(this.interval);
 	dom.show("#video-controls");
 	if (!persist)
     	this.interval = window.setTimeout(function() {
