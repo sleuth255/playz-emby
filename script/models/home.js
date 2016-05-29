@@ -75,7 +75,8 @@ Home.prototype.load = function() {
 			return item.CollectionType == "movies" ||
 				item.CollectionType == "photos" ||
 				item.CollectionType == "music" ||
-				item.CollectionType == "tvshows"
+				(item.CollectionType == "tvshows") ||
+				(item.CollectionType == null)
 		});
 		
 		self.total += data.Items.length;
@@ -122,7 +123,8 @@ Home.prototype.load = function() {
 				childNodes: [{
 					nodeName: "span",
 					className: "user-views-item-name",	
-					text: item.Name				
+					text: item.Name		
+					//text: item.CollectionType			
 				}]
 			});		
 						
@@ -137,7 +139,34 @@ Home.prototype.load = function() {
 				error: error				
 			});				
 		});
+/*// Settings logic
+		var column = Math.floor(index/rowCount);
+		var row = index - (column*rowCount);
+		dom.append("#userViews_" + currentColumn, {
+			nodeName: "a",
+			href: "#",
+			className: "user-views-item user-views-item-" + item.CollectionType,
+			id: "viewItem_" + currentColumn + "_" + row,
+			dataset: {
+				id: item.Id,
+				collectionType: item.CollectionType,
+				name: item.Name,
+				limit: limit,	
+				imageTag: item.ImageTags.Primary,				
+				keyUp: row == 0 ? ".server-link" : "#viewItem_" + currentColumn + "_" + (row - 1),
+				keyRight: currentColumn ==  columnCount ? "#latestItemSet_0 a" : "#viewItem_" + (currentColumn + 1) + "_" + row + ", #latestItemSet_0 a",
+				keyDown: row == rowCount - 1 ? "#viewItem_" + currentColumn + "_" + row : "#viewItem_" + currentColumn + "_" + (row + 1),
+				keyLeft: currentColumn == 0 ? "#viewItem_" + currentColumn + "_" + row : "#viewItem_" + (currentColumn - 1) + "_" + row					
+			},
+			childNodes: [{
+				nodeName: "span",
+				className: "user-views-item-name",	
+				text: "Emby Settings"				
+				//text: item.CollectionType			
+			}]
+		});		
 		
+ */// End Settings Logic	
 		dom.on(".user-views-item", "click", function(event) {
 			dom.dispatchCustonEvent(document, "userViewSelected", this.dataset);
 		});		

@@ -69,6 +69,7 @@ Player.prototype.load = function(data, settings) {
 		});	
 
 		var video = document.getElementById("video");		
+		var playerRegion = document.getElementById("player");		
 		var playButton = document.getElementById("play-pause");
 		var stopButton = document.getElementById("stop-exit");
 		var infoButton = document.getElementById("info-button");
@@ -155,8 +156,7 @@ Player.prototype.load = function(data, settings) {
 
 		// Event listener for the stop button
 		stopButton.addEventListener("click", function() {
-			dom.remove("#player");	
-			dom.remove("#video-controls");
+			self.close();
 		});
 
 		// Event listener for the seek bar
@@ -217,6 +217,19 @@ Player.prototype.load = function(data, settings) {
 };
 
 Player.prototype.close = function() {
+	time = Math.floor(event.target.currentTime);	
+	var ticks = time * 10000000;
+
+	emby.postSessionPlayingStopped({
+		data: {
+			ItemId: item.Id,
+			MediaSourceId: item.Id,
+			QueueableMediaTypes: "video",
+			CanSeek: true,
+			PositionTicks: ticks,
+			PlayMethod: "DirectStream"
+		}
+	});
 	dom.remove("#player");	
 	dom.remove("#video-controls");
 };
