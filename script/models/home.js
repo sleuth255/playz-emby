@@ -142,17 +142,24 @@ Home.prototype.load = function() {
 /*// Settings logic
 		var column = Math.floor(index/rowCount);
 		var row = index - (column*rowCount);
+			currentColumn = column;
+			dom.append("#userViews", {
+				nodeName: "div",
+				className: "user-views-column",
+				id: "userViews_" + currentColumn
+			});
+			
 		dom.append("#userViews_" + currentColumn, {
 			nodeName: "a",
 			href: "#",
-			className: "user-views-item user-views-item-" + item.CollectionType,
+			className: "user-views-item user-views-item-settings",
 			id: "viewItem_" + currentColumn + "_" + row,
 			dataset: {
-				id: item.Id,
-				collectionType: item.CollectionType,
-				name: item.Name,
+				id: "viewItem_settings",
+				collectionType: "settings",
+				name: "Emby Settings",
 				limit: limit,	
-				imageTag: item.ImageTags.Primary,				
+//				imageTag: item.ImageTags.Primary,				
 				keyUp: row == 0 ? ".server-link" : "#viewItem_" + currentColumn + "_" + (row - 1),
 				keyRight: currentColumn ==  columnCount ? "#latestItemSet_0 a" : "#viewItem_" + (currentColumn + 1) + "_" + row + ", #latestItemSet_0 a",
 				keyDown: row == rowCount - 1 ? "#viewItem_" + currentColumn + "_" + row : "#viewItem_" + currentColumn + "_" + (row + 1),
@@ -166,7 +173,7 @@ Home.prototype.load = function() {
 			}]
 		});		
 		
- */// End Settings Logic	
+*/// End Settings Logic	
 		dom.on(".user-views-item", "click", function(event) {
 			dom.dispatchCustonEvent(document, "userViewSelected", this.dataset);
 		});		
