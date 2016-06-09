@@ -19,36 +19,36 @@ Player.prototype.load = function(data, settings) {
 			className: "player",
 			id: "player",
 			childNodes: [{
-				nodeName: "video",
-				className: "video",
-				id: "video"
-			    },{
+					nodeName: "video",
+					className: "video",
+					id: "video"
+			    	     },{
 					nodeName: "div",
 					id: "video-controls",
 					className: "video-controls",
 					childNodes: [{
-					    nodeName: "button",
-					    className: "play",
-					    id: "play-pause",
-					    text: "Pause"
-				    }, {
-						nodeName: "button",
-						className: "stop",
-						id: "stop-exit",
-						text: "Stop"
-				    }, {
-						nodeName: "button",
-						className: "info-button",
-						id: "info-button",
-						text: "0:00/0:00"
-				    }, {
-					    nodeName: "input",
-					    "type": "range",
-					    className: "seek-bar",
-					    id: "seek-bar",
-					    "value": "0",
-				    }]
-			    }]
+					    		nodeName: "button",
+					    		className: "play",
+					    		id: "play-pause",
+					    		text: "Pause"
+				    		     }, {
+							nodeName: "button",
+							className: "stop",
+							id: "stop-exit",
+							text: "Stop"
+					    	     }, {
+							nodeName: "button",
+							className: "info-button",
+							id: "info-button",
+							text: "0:00/0:00"
+					    	     }, {
+							 nodeName: "input",
+							 "type": "range",
+							 className: "seek-bar",
+							 id: "seek-bar",
+							 "value": "0",
+				    		     }]
+			    	    }]
 		});	
 
 		dom.append("#video", {
@@ -75,7 +75,6 @@ Player.prototype.load = function(data, settings) {
 		var infoButton = document.getElementById("info-button");
 		var seekBar = document.getElementById("seek-bar");
 
-		
 		video.onplay = function() {
 			time = Math.floor(event.target.currentTime);	
 			var ticks = time * 10000000;
@@ -113,8 +112,7 @@ Player.prototype.load = function(data, settings) {
 
 			}
 			// Update the slider value
-			var value = (100 / video.duration) * video.currentTime;
-			seekBar.value = value;
+			seekBar.value = (100 / video.duration) * video.currentTime;
 			console.log("ReportPlaybackProgress - " + time + " : " + ticks);
 		};
 
@@ -140,17 +138,11 @@ Player.prototype.load = function(data, settings) {
 		// Event listener for the play/pause button
 		playButton.addEventListener("click", function() {
 			if (video.paused == true) {
-				// Play the video
-				video.play();
-
-				// Update the button text to 'Pause'
-				playButton.innerHTML = "Pause";
+				video.play();				// Play the video
+				playButton.innerHTML = "Pause";		// Update the button text to 'Pause'
 			} else {
-				// Pause the video
-				video.pause();
-
-				// Update the button text to 'Play '
-				playButton.innerHTML = "Play";
+				video.pause();				// Pause the video
+				playButton.innerHTML = "Play";		// Update the button text to 'Play '
 			}
 		});
 
@@ -161,11 +153,8 @@ Player.prototype.load = function(data, settings) {
 
 		// Event listener for the seek bar
 		seekBar.addEventListener("change", function() {
-			// Calculate the new time
-			var time = video.duration * (seekBar.value / 100);
-
-			// Update the video time
-			video.currentTime = time;
+			var time = video.duration * (seekBar.value / 100);	// Calculate the new time
+			video.currentTime = time;				// Update the video time
 		});
 
 	
@@ -188,27 +177,16 @@ Player.prototype.load = function(data, settings) {
 		video.addEventListener("timeupdate", function() {
 
 			// update the time/duration and slider values
-			var durmin = video.duration / 60;
-			var durhr = (durmin - (durmin % 60)) / 60;
-			durmin = durmin % 60;
+			var durmin = Math.floor(video.duration / 60);
+			var durhr = Math.floor(durmin / 60);
+			durmin = ('0' + (durmin % 60)).slice(-2);
 			
-			var curmin = video.currentTime / 60;
-			var curhr = (curmin - (curmin % 60)) / 60;
-			curmin = curmin % 60;
+			var curmin = Math.floor(video.currentTime / 60);
+			var curhr = Math.floor(curmin / 60);
+			curmin = ('0' + (curmin % 60)).slice(-2);
 
-			durmin = durmin.toFixed(0);
-			durhr = durhr.toFixed(0);
-			curmin = curmin.toFixed(0);
-			curhr = curhr.toFixed(0);
-			if (durmin.length < 2)
-				durmin = "0" + durmin;
-			if (curmin.length < 2)
-				curmin = "0" + curmin;
-			var tmpstr = curhr+":"+curmin+"/"+durhr+ ":"+durmin;
-			infoButton.innerHTML = tmpstr;
-
-			var value = (100 / video.duration) * video.currentTime;
-			seekBar.value = value;
+			infoButton.innerHTML = curhr+":"+curmin+"/"+durhr+ ":"+durmin;
+			seekBar.value = (video.currentTime / video.duration) * 100;
 		});
 
 		video.load();
