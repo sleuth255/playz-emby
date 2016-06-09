@@ -68,8 +68,8 @@ Player.prototype.load = function(data, settings) {
 			"type": mime.lookup("m3u8")
 		});	
 
-		var video = document.getElementById("video");		
-		var playerRegion = document.getElementById("player");		
+		var video = document.getElementById("video");
+		var playerRegion = document.getElementById("player");
 		var playButton = document.getElementById("play-pause");
 		var stopButton = document.getElementById("stop-exit");
 		var infoButton = document.getElementById("info-button");
@@ -153,8 +153,7 @@ Player.prototype.load = function(data, settings) {
 
 		// Event listener for the seek bar
 		seekBar.addEventListener("change", function() {
-			var time = video.duration * (seekBar.value / 100);	// Calculate the new time
-			video.currentTime = time;				// Update the video time
+			video.currentTime = video.duration * (seekBar.value / 100);		// Update the video time
 		});
 
 	
