@@ -112,7 +112,7 @@ Player.prototype.load = function(data, settings) {
 
 			}
 			// Update the slider value
-			seekBar.value = (100 / video.duration) * video.currentTime;
+			seekBar.value = (video.currentTime / video.duration) * 100;
 			console.log("ReportPlaybackProgress - " + time + " : " + ticks);
 		};
 
