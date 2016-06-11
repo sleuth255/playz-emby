@@ -24,7 +24,6 @@ CollectionSummary.prototype.load = function(data, settings) {
 
 	dom.hide("#server");
 	dom.hide("#user");
-	dom.hide("#settings");
 	dom.show("#homeLink");
 	
 	dom.html("#view", {

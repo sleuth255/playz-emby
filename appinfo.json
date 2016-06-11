@@ -1,6 +1,7 @@
 {
     "vendor": "The Paradigm Grid",
-    "icon": "images/embyWebOSIcon.png",
+    "iconColor": "White",
+    "icon": "images/embyicon80x80.png",
     "main": "index.html",
     "id": "theparadigmgrid.emby.playz",
     "title": "Emby",

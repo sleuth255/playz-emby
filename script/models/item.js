@@ -13,7 +13,6 @@ Item.prototype.load = function(id, settings) {
 	
 	dom.hide("#server");
 	dom.hide("#user");
-	dom.hide("#settings");
 	dom.show("#homeLink");
 	dom.empty("#details");
 						

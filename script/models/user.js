@@ -130,6 +130,12 @@ User.prototype.login = function() {
 	
 	dom.append("body", {
 		nodeName: "div",
+		className: "backdrop",
+		id: "serverBackdrop"
+	});
+	
+	dom.append("body", {
+		nodeName: "div",
 		className: "settings",
 		id: "userLoginSettings",
 		childNodes: [
@@ -303,6 +309,8 @@ User.prototype.login = function() {
 	
 	function enterPress(event)
 	{
+		dom.hide("#serverBackdrop");			
+		dom.remove("#serverBackdrop");			
 		event.preventDefault();
 		var password = dom.val("#password");
 		var username = dom.data(".key-user-selected", "username");

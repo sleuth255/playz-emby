@@ -64,6 +64,12 @@ Server.prototype.add = function() {
 	
 	dom.append("body", {
 		nodeName: "div",
+		className: "backdrop",
+		id: "serverBackdrop"
+	});
+	
+	dom.append("body", {
+		nodeName: "div",
 		className: "settings",
 		id: "serverSettings",
 		childNodes: [
@@ -90,26 +96,20 @@ Server.prototype.add = function() {
 							nodeName: "div",
 							id: "keyInstructions",
 							className: "key-instructions",
-							text: "Enter an Emby server url below:"
+							text: "Enter your Emby server's IP address below:"
 						}, {
 							nodeName: "label",
 							className: "key-label",
 							htmlFor: "serverUrl",
-							text: "URL"
+							text: " "
 						}, {
 							nodeName: "input",
 							className: "key-field",
 							id: "serverUrl",
 							"type": "text",
 							"required": "required",
-							"value": "10.1.0.8",
-							"placeholder": "http://server.ip"
-						}, {
-							nodeName: "input",
-							className: "key-field",
-							id: "serverUrl",
-							"type": "submit",
-							"required": "required"
+//							"value": "your default server IP goes here",
+							"placeholder": "                              (press <Enter> to submit)"
 						}
 					]	
 				}]					
@@ -117,55 +117,37 @@ Server.prototype.add = function() {
 		]	
 	});	
 
+	document.getElementById("serverUrl").focus();
 	dom.on("#keyForm", "submit", enterPress, false);
-
-	keys.load({
-		url: "script/keys/en.default.json",
-		success: keysLoaded,
-		error: error,
-		enter: enterPress,
-		clear: clearPress,
-		space: spacePress,
-		'delete': deletePress,									
-		press: keyPress,
-		close: close,
-		rightKeyQuery: ".key-field" 
+	dom.on("#serverUrl", "blur", function(event) {
+		document.getElementById("serverUrl").focus();
 	});
+	dom.on("#serverUrl", "keydown", function(event) {
+		switch(event.which) {
+		case keys.KEY_OK:
+            enterPress(event);
+			break;
+			
+		case keys.KEY_SPACE:
+            spacePress(event);
+			break;	
+			
+		case keys.KEY_BACKSPACE:
+            deletePress(event);
+			break;	
+			
+		default:				
+			keyPress(event.key);
+			break;
+			
+      }
 		
-	function keysLoaded() {		
-		keys.settings.actions.enter = "Add";
-		keys.open("#keyEntry");
-		keys.focus();
-		dom.on("body", "keydown", lostFocus);
-		dom.on(".key-field", "keydown", fieldKeyEvent);		
-	}	
-	
-	function lostFocus(event) {
-		if (event.target.tagName != "A" && event.target.tagName != "INPUT") {
-			keys.focus("#" + dom.data("#" + keys.id, "lastFocus"));
-		}
-	}	
-	
-	function fieldKeyEvent(event) {
-		event.stopPropagation();
-		if (event.which == keys.KEY_LEFT) {
-			if (caret.position(".key-field") == 0) {
-				keys.focus(".key-row .key-focus");
-			}	
-		}
-	}
-	
-	function error(data)
-	{
-		message.show({
-			messageType: message.error,			
-			text: data.ResponseStatus.StackTrace
-		});	
-		console.log(data.ResponseStatus.StackTrace);
-	}	
+	});
 	
 	function enterPress(event)
 	{
+		dom.hide("#serverBackdrop");			
+		dom.remove("#serverBackdrop");			
 		event.preventDefault();
 		event.stopPropagation();
 		
@@ -214,8 +196,10 @@ Server.prototype.add = function() {
 	
 	function keyPress(key)
 	{
-		var value = dom.val("#serverUrl");
-		dom.val("#serverUrl", value + key);
+		if (key.length == 1){
+			var value = dom.val("#serverUrl");
+		    dom.val("#serverUrl", value + key);
+		}
 	}	
 	
 	function close() {		

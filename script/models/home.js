@@ -18,7 +18,6 @@ Home.prototype.load = function() {
 
 	dom.show("#server");
 	dom.show("#user");
-	dom.show("#settings");
 	dom.hide("#homeLink");
 					
 	dom.html("#view", {
