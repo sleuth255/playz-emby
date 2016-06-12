@@ -2,6 +2,8 @@
 // Modifed: 24/04/2016
 // Sith'ari Consulting Australia
 // --------------------------------------------
+var lastidx = 0;
+var idx = 0;
 
 function User() {
 	this.current = "emby.settings.current.user";	
@@ -37,7 +39,8 @@ User.prototype.authenticate = function(data) {
 	function authenticated(data)
 	{		
 		message.remove();
-							
+		dom.hide("#serverBackdrop");			
+		dom.remove("#serverBackdrop")
 		emby.getSystemInformation({
 			success: function(data) {
 				dom.html("#server", {
@@ -182,22 +185,17 @@ User.prototype.login = function() {
 							className: "key-field",
 							id: "password",
 							"type": "password",
-							"value": "sleuth255",
-							"required": "required"
-						}, {
-							nodeName: "input",
-							className: "key-field",
-							id: "password",
-							"type": "submit",
-							"required": "required"
-						}
-					]	
+//							"value": "put your default password here",
+							"required": "required",
+							"placeholder": "                              (press <Enter> to submit)"
+						}]	
 				}]					
 			}
 		]	
 	});	
 
 	this.users.forEach(function(item, index){	
+		lastidx += 1;
 		dom.append("#users", {
 			nodeName: "a",
 			className: "key-user" + (index == 0 ? " key-user-selected" : ""),
@@ -206,11 +204,13 @@ User.prototype.login = function() {
 			dataset: {
 				username: item.Name,
 				userId: item.Id,
-				hasPassword: item.HasPassword,
+				hasPassword: item.HasPassword
+/*			
 				keyLeft: index == 0 ? ".key-row .key-focus" : "#keyUser" + (index-1),
 				keyUp: "#keyUser" + index,
 				keyRight: "#keyUser" + (index+1),
 				keyDown: "#password"
+*/				
 			}, 			
 			childNodes: [{
 				nodeName: "div",				
@@ -224,35 +224,40 @@ User.prototype.login = function() {
 		});
 	});
 
-	dom.on("#keyForm", "submit", enterPress, false);
-
-	keys.load({
-		url: "./script/keys/en.default.json",
-		success: keysLoaded,
-		error: error,
-		enter: enterPress,
-		clear: clearPress,
-		space: spacePress,
-		'delete': deletePress,									
-		press: keyPress,
-		close: close,
-		rightKeyQuery: ".key-user-selected" 
+    lastidx--; //make zero relative
+    
+	document.getElementById("keyUser0").focus();
+	dom.on(document,"keySelected",function(event){
+		dom.removeClass(".key-user", "key-user-selected");
+		dom.addClass(this, "key-user-selected");
 	});
-		
-	function keysLoaded() {
-		keys.settings.actions.enter = "Login";
-		keys.open("#keyEntry");
-		keys.focus();
-		
-		dom.on("body", "keydown", lostFocus);	
-		dom.on(".key-user", "keydown", userSelectEvent);	
-		dom.on(".key-user", "click", function(event) {
+	dom.on("#keyForm", "submit", enterPress, false);
+	dom.on("body", "keydown", lostFocus);	
+	dom.on(".key-user", "keydown", function(event) {
+		switch (event.which) {
+		case keys.KEY_LEFT: 
+			if (idx  == 0){idx = lastidx} else idx--;
+			document.getElementById("keyUser" + idx).focus();
+			dom.dispatchCustonEvent(document, "keySelected");
+			break;
+		case keys.KEY_RIGHT: 
+			if(idx == lastidx){idx = 0} else idx++;
+			document.getElementById("keyUser" + idx).focus();
+			dom.dispatchCustonEvent(document, "keySelected");
+			break;
+		case keys.KEY_DOWN: 
 			dom.removeClass(".key-user", "key-user-selected");
 			dom.addClass(this, "key-user-selected");
-			dom.dispatchCustonEvent(document, "userSelected");
-		});							
-		dom.on("#password", "keydown", fieldKeyEvent);		
-	}	
+			document.getElementById("password").focus();
+			break;
+	}
+		});	
+	dom.on(".key-user", "click", function(event) {
+		dom.removeClass(".key-user", "key-user-selected");
+		dom.addClass(this, "key-user-selected");
+	});							
+	dom.on("#password", "keydown", fieldKeyEvent);		
+	
 	
 	function lostFocus(event) {
 		if (event.target.tagName != "A" && event.target.tagName != "INPUT") {
@@ -279,25 +284,6 @@ User.prototype.login = function() {
 		}
 	}
 
-	function userSelectEvent(event) {
-		event.stopPropagation();
-		
-		switch (event.which) {
-			case keys.KEY_LEFT: 
-				dom.focus(dom.data(this, "keyLeft"));
-				break;
-			case keys.KEY_UP: 
-				dom.focus(dom.data(this, "keyUp"));
-				break;
-			case keys.KEY_RIGHT: 
-				dom.focus(dom.data(this, "keyRight"));
-				break;
-			case keys.KEY_DOWN: 
-				dom.focus(dom.data(this, "keyDown"));
-				break;												
-		}
-	}	
-	
 	function error(data)
 	{
 		message.show({
@@ -309,8 +295,6 @@ User.prototype.login = function() {
 	
 	function enterPress(event)
 	{
-		dom.hide("#serverBackdrop");			
-		dom.remove("#serverBackdrop");			
 		event.preventDefault();
 		var password = dom.val("#password");
 		var username = dom.data(".key-user-selected", "username");
@@ -369,8 +353,10 @@ User.prototype.login = function() {
 	
 	function keyPress(key)
 	{
-		var value = dom.val("#password");
-		dom.val("#password", value + key);
+		if (key.length== 1){
+		    var value = dom.val("#password");
+		    dom.val("#password", value + key);
+		}
 	}	
 	
 	function close() {		
