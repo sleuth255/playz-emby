@@ -29,6 +29,8 @@ Server.prototype.open = function(url, add) {
 	
 	function success(data)
 	{	
+		dom.hide("#serverBackdrop");			
+		dom.remove("#serverBackdrop");			
 		emby.settings.ServerUrl = url;
 		storage.set(self.current, url);
 				
@@ -146,8 +148,6 @@ Server.prototype.add = function() {
 	
 	function enterPress(event)
 	{
-		dom.hide("#serverBackdrop");			
-		dom.remove("#serverBackdrop");			
 		event.preventDefault();
 		event.stopPropagation();
 		
