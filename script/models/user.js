@@ -194,6 +194,7 @@ User.prototype.login = function() {
 		]	
 	});	
 
+	lastidx = idx = 0;
 	this.users.forEach(function(item, index){	
 		lastidx += 1;
 		dom.append("#users", {
@@ -281,7 +282,7 @@ User.prototype.login = function() {
 				} else {
 					dom.focus(".key-user");
 				}	
-		}
+			}
 	}
 
 	function error(data)
