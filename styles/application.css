@@ -19,7 +19,7 @@ a {
 	right: 0;
 	bottom: 0;
 	left: 0;
-	background: #000 url("../images/playz-emby-logo-full-stacked.png") no-repeat center center;
+	background: #000 url("../images/screenplay-logo-full-stacked.png") no-repeat center center;
 }
 
 .splash-author {
@@ -61,7 +61,7 @@ a {
 	left: 0; 
 	right: 0; 
 	top: 0; 
-	height: 100px;	
+	height: 150px;	
 	background-color: rgba(0, 0, 0, 0.8);
 	color: #fff;
 }
@@ -180,7 +180,7 @@ a {
 #view {
 	position: absolute; 
 	left: 0; 
-	top: 100px; 
+	top: 150px; 
 	bottom: 0;
 	right: 0;	
 	background-color: rgba(0, 0, 0, 0.8);		
@@ -195,11 +195,11 @@ a {
 }
 
 #view::-webkit-scrollbar-thumb {
-	background-color: rgba(40, 40, 40, 0.96);	
+	background-color: rgba(40, 40, 40, 0.8);	
 }
 
 #view::-webkit-scrollbar-track {
-	background-color: rgba(20, 20 ,20, 0.96);	
+	background-color: rgba(20, 20 ,20, 0.8);	
 }
 
 #details {
@@ -216,7 +216,7 @@ a {
 	right: 0;
 	bottom: 0;
 	left: 0;
-	background: #000 url("../images/playz-emby-logo-full-stacked.png") no-repeat center center;
+	background: #000 url("../images/screenplay-logo-full-stacked.png") no-repeat center center;
 }
 
 #serverSettings, #userLoginSettings {
@@ -225,7 +225,7 @@ a {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background: rgba(0, 0, 0, .9);
+	background: rgba(0, 0, 0, .8);
 }
 
 input {
@@ -725,7 +725,7 @@ input:hover {
 
 .item-content {
 	display: inline-block;
-	font-size: 19px;		
+	font-size: 26px;		
 }
 
 #itemPoster {
@@ -746,7 +746,7 @@ input:hover {
 }
 
 #itemDetails .title {
-	font-size: 26px;
+	font-size: 36px;
 	font-weight: bold;
  }
 
@@ -758,7 +758,7 @@ input:hover {
 
 .overview {
 	color: #eee;
-	max-height: 180px;
+	max-height: 550px;
 	overflow: hidden;
 	margin: 5px 5px 5px 0px;
 	padding: 5px 5px 5px 0px;

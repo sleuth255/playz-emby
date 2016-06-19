@@ -1,10 +1,10 @@
 {
     "vendor": "The Paradigm Grid",
-    "iconColor": "White",
-    "icon": "images/embyicon80x80.png",
+    "iconColor": "black",
+    "icon": "images/screenplay icon 80x80.png",
     "main": "index.html",
     "id": "theparadigmgrid.emby.playz",
-    "title": "Emby",
+    "title": "screenplay",
     "type": "web",
     "version": "0.0.1"
 }

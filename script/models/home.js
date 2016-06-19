@@ -81,9 +81,11 @@ Home.prototype.load = function() {
 		self.total += data.Items.length;
 		columnCount =  Math.ceil(data.Items.length / rowCount);
 			
+		var idx = 0;
 		data.Items.forEach(function(item, index) {
 			var column = Math.floor(index/rowCount);
 			var row = index - (column*rowCount);
+			idx++;
 
 			switch (item.CollectionType) {
 				case "music", "photos":
@@ -138,9 +140,14 @@ Home.prototype.load = function() {
 				error: error				
 			});				
 		});
-/*// Settings logic
-		var column = Math.floor(index/rowCount);
-		var row = index - (column*rowCount);
+
+// Settings logic
+		limit = 5;
+		rowCount = 6;
+		columnCount = 1;		
+		currentColumn = 0;
+		var column = Math.floor(idx/rowCount);
+		var row = idx - (column*rowCount);
 			currentColumn = column;
 			dom.append("#userViews", {
 				nodeName: "div",
@@ -158,7 +165,6 @@ Home.prototype.load = function() {
 				collectionType: "settings",
 				name: "Emby Settings",
 				limit: limit,	
-//				imageTag: item.ImageTags.Primary,				
 				keyUp: row == 0 ? ".server-link" : "#viewItem_" + currentColumn + "_" + (row - 1),
 				keyRight: currentColumn ==  columnCount ? "#latestItemSet_0 a" : "#viewItem_" + (currentColumn + 1) + "_" + row + ", #latestItemSet_0 a",
 				keyDown: row == rowCount - 1 ? "#viewItem_" + currentColumn + "_" + row : "#viewItem_" + currentColumn + "_" + (row + 1),
@@ -167,12 +173,12 @@ Home.prototype.load = function() {
 			childNodes: [{
 				nodeName: "span",
 				className: "user-views-item-name",	
-				text: "Emby Settings"				
+				text: "Settings"				
 				//text: item.CollectionType			
 			}]
 		});		
 		
-*/// End Settings Logic	
+// End Settings Logic	
 		dom.on(".user-views-item", "click", function(event) {
 			dom.dispatchCustonEvent(document, "userViewSelected", this.dataset);
 		});		
