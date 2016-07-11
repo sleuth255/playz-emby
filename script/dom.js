@@ -323,6 +323,8 @@ DOM.prototype.focus = function(query) {
 			node.focus();
 			return node;
 		}
+		document.getElementById("view").scrollLeft = 0;
+		document.getElementById("viewItem_0_0").focus();
 	}
 	return null;
 };
