@@ -312,7 +312,6 @@ DOM.prototype.focus = function(query) {
 			var elmnt = document.getElementById("view");
 			var rect = node.getBoundingClientRect();
 			var leftside = elmnt.scrollLeft;
-			var rightside = elmnt.scrollLeft + window.innerWidth;
 			if (rect.left < 0)
 			{	
 			  	elmnt.scrollLeft-= (rect.left*-1) + 5;
@@ -471,20 +470,4 @@ try {
 
   CustomEvent.prototype = window.Event.prototype;
   window.CustomEvent = CustomEvent; // expose definition to window
-}
-function isElementInViewport (el) {
-
-    //special bonus for those using jQuery
-    if (typeof jQuery === "function" && el instanceof jQuery) {
-        el = el[0];
-    }
-
-    var rect = el.getBoundingClientRect();
-
-    return (
-        rect.top >= 0 &&
-        rect.left >= 0 &&
-        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
-        rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
-    );
 }
