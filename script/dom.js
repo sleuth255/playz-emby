@@ -311,7 +311,6 @@ DOM.prototype.focus = function(query) {
 		if (node) {		
 			var elmnt = document.getElementById("view");
 			var rect = node.getBoundingClientRect();
-			var leftside = elmnt.scrollLeft;
 			if (rect.left < 0)
 			{	
 			  	elmnt.scrollLeft-= (rect.left*-1) + 5;
