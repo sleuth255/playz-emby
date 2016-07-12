@@ -323,8 +323,12 @@ DOM.prototype.focus = function(query) {
 			node.focus();
 			return node;
 		}
-		document.getElementById("view").scrollLeft = 0;
-		document.getElementById("viewItem_0_0").focus();
+		var elmnt = document.getElementById("viewItem_0_0");
+		if (elmnt) // homescreen only
+		{
+		    document.getElementById("view").scrollLeft = 0;
+		    elmnt.focus();
+		}
 	}
 	return null;
 };
