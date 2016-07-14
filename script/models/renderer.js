@@ -381,33 +381,34 @@ RENDERER.prototype.userItem = function(data, settings) {
 	var imageId = item.Id;
 	var imageTag = item.ImageTags.Primary;
 	var imageType = "primary";
-	var imageClass =  "cover cover-" + item.Type.toLowerCase() + "-large poster-" + item.Type.toLowerCase();	
+	if (item.Type == "Episode")
+		var imageClass = "cover cover-series-large";
+	else
+	    var imageClass =  "cover cover-" + item.Type.toLowerCase() + "-large poster-" + item.Type.toLowerCase();
 	
 	switch (item.Type) {
 		case "Audio":
 			var imageId = item.ParentId;
 			var imageTag = item.ParentLogoImageTag;		
 			break;
+		default:
+			break;
 	}
 
+	dom.append(container, 
+			{
+				nodeName: "div",
+				id: "itemPoster",
+				childNodes: 
+				[{
+					nodeName: "div",
+					className: imageClass,
+					style: {
+						backgroundImage: "url(" + emby.getImageUrl({'itemId': imageId, tag: imageTag, imageType: imageType, height: 600, addPlayedIndicator: item.UserData.Played ? true : false}) + ")" 	
+					}
+				}]
+			});
 			
-	dom.append(container, {
-		nodeName: "div",
-		id: "itemPoster",
-		childNodes: [item.SeriesId && item.Type == "Episode" ? {
-			nodeName: "div",
-			className: "cover cover-series-large",
-			style: {
-				backgroundImage: "url(" + emby.getImageUrl({'itemId': item.SeriesId, tag: item.SeriesPrimaryImageTag, imageType: imageType, height: 600, addPlayedIndicator: item.UserData.Played ? true : false}) + ")" 	
-			}			
-		} : {}, {
-			nodeName: "div",
-			className: imageClass,
-			style: {
-				backgroundImage: "url(" + emby.getImageUrl({'itemId': imageId, tag: imageTag, imageType: imageType, height: 600, addPlayedIndicator: item.UserData.Played ? true : false}) + ")" 	
-			}
-		}]
-	});
 
 	if (item.People) {
 		var people = [];

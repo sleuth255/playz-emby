@@ -350,6 +350,8 @@ Collection.prototype.load = function(data, settings) {
 	
 	dom.on("#collectionIndex a", "click", scrollToIndex);
 	
+	dom.on("#collectionIndex a", "keyup", scrollToIndex);
+	
 	dom.on("#collectionIndex a", "keydown", indexNavigation);
 		
 	emby.getUserItems({
@@ -512,7 +514,7 @@ Collection.prototype.load = function(data, settings) {
 				indexFocus("#index-" + (index-1));
 				break;
 			case keys.KEY_UP: 
-				indexFocus(dom.data("#view", "lastFocus"));
+				collectionFocus(dom.data("#view", "lastFocus"));
 				break;
 			case keys.KEY_RIGHT: 
 				indexFocus("#index-" + (index+1));
@@ -668,6 +670,46 @@ Collection.prototype.load = function(data, settings) {
 	
 	function indexFocus(query) {
 		var node = dom.focus(query);
+		if (node && node.id) {
+			if (node.classList.contains("index-item")) {
+				dom.data("#collectionIndex", "lastFocus", "#" + node.id);
+			}
+			if (dom.hasClass(node, "latest-item")) {
+				var year = dom.data(node, "year") || "";
+				var runtime = dom.data(node, "runtime") || "";
+				var hours = (runtime >= 60 ? Math.floor(runtime/60) + " hr " : "");
+				var mins = (runtime % 60 > 0 ? runtime % 60 + " min" : "");
+												
+				dom.html("#details", {
+					nodeName: "div",
+					childNodes: [{
+						nodeName: "div",
+						className: "title",
+						text: dom.data(node, "name")
+					}, {
+						nodeName: "div",
+						className: "subtitle",
+						text: year + (runtime ? " / " + hours + mins : "")			
+					}]
+				});
+			} else {
+				dom.empty("#details");
+			}			
+		}
+	}
+					
+	function collectionFocus(query) {
+		var node = dom.querySelector(query);
+		if (node)
+		    dom.focus(query);
+		else
+		{
+			playerpopup.show({
+				duration: 2000,
+				text: "There is no item in your collection beginning with this letter"
+			});	
+		}
+
 		if (node && node.id) {
 			if (node.classList.contains("index-item")) {
 				dom.data("#collectionIndex", "lastFocus", "#" + node.id);
