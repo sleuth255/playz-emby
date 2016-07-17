@@ -24,16 +24,16 @@ Home.prototype.load = function() {
 		nodeName: "div",
 		className: "home-view",
 		id: "home",
-		childNodes: [{
+/*		childNodes: [{
 			nodeName: "div",
 			className: "user-views",
 			id: "userViews",
-				childNodes: [{
+*/				childNodes: [{
 				nodeName: "div",
 				className: "user-views-column",
 				id: "userViews_0"
 			}]
-		}]
+//		}]
 	});
 
 	dom.on("body", "keydown", lostFocus);

@@ -47,7 +47,6 @@ Collection.prototype.load = function(data, settings) {
 		
 	dom.hide("#server");
 	dom.hide("#user");
-	dom.hide("#settings");
 	dom.show("#homeLink");
 	
 	dom.html("#view", {
@@ -56,29 +55,8 @@ Collection.prototype.load = function(data, settings) {
 		id: "collection",
 		childNodes: [{
 			nodeName: "div",
-			className: "user-views",
-			id: "userViews",
-			childNodes: [{
-				nodeName: "div",
-				className: "user-views-column",
-				id: "userViews_0",
-				childNodes: [{
-					nodeName: "a",
-					className: "user-views-item",
-					href: "#",
-					id: "viewPlay",
-					dataset: {
-						keyUp: "#homeLink a",
-						keyDown: "#all",
-						keyRight: "#viewItem_1_0, a.latest-item"	
-					},
-					childNodes: [{
-						nodeName: "span",
-						className: "user-views-item-name glyphicon play",
-						text: ""
-					}]					
-				}]				
-			}]
+			className: "user-views-column",
+			id: "userViews_0"
 		}]
 	});	
 	
@@ -402,7 +380,7 @@ Collection.prototype.load = function(data, settings) {
 			columnViewportCount = Math.floor(dom.width("body") / columnWidth);
 			dom.dispatchCustonEvent(document, "collectionAllItemsInitialised");	
 		}
-		focus("#userViews a:first-child");				
+		focus(".latest-item");
 	}
 
 	function displayAllUserItemsNext(data) {
@@ -537,7 +515,7 @@ Collection.prototype.load = function(data, settings) {
 			success: function(data) {
 				var count = self.totalRecordCount - data.TotalRecordCount;
 				var view = dom.querySelector("#view");
-				view.scrollLeft = Math.floor(count/2) * columnWidth;
+				view.scrollLeft = Math.floor((count/2) * columnWidth);
 				dom.removeClass(".index-item", "index-current");
 				highlightIndex(index);			
 				dom.data("#view", "lastFocus", ".column-" + index + " a:last-child")
@@ -607,9 +585,9 @@ Collection.prototype.load = function(data, settings) {
 		}
 		
 		var node = dom.querySelector(dom.data("#view", "lastFocus"));
-		if (node && (node.parentNode.offsetLeft < event.currentTarget.scrollLeft || node.parentNode.offsetLeft + node.parentNode.clientWidth > event.currentTarget.scrollLeft + dom.width("#view"))) {
-			focus(".column-" + (columnCurrent+2) + " a");
-		}
+//		if (node && (node.parentNode.offsetLeft < event.currentTarget.scrollLeft || node.parentNode.offsetLeft + node.parentNode.clientWidth > event.currentTarget.scrollLeft + dom.width("#view"))) {
+//			focus(".column-" + (columnCurrent+2) + " a");
+//		}
 		
 		scrollLeft = event.currentTarget.scrollLeft;				
 		columnLast = columnCurrent;

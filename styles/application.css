@@ -62,7 +62,8 @@ a {
 	right: 0; 
 	top: 0; 
 	height: 150px;	
-	background-color: rgba(0, 0, 0, 0.8);
+	background: linear-gradient(rgba(10,10,0,0.81), rgba(10,10,0,0.5),rgba(10,10,0,0.32));
+/*	background-color: rgba(0, 0, 0, 0.1); */
 	color: #fff;
 }
 
@@ -183,7 +184,7 @@ a {
 	top: 150px; 
 	bottom: 0;
 	right: 0;	
-	background-color: rgba(0, 0, 0, 0.8);		
+	background-color: rgba(0, 0, 0, 0.3);		
 	padding: 20px 50px;
 	overflow-x: scroll;
 	overflow-y: hidden;
@@ -386,11 +387,11 @@ input:hover {
 	font-size: 40px;
 	color: #fff;
 	padding: 20px 10px; 
-	border-radius: 22px;	
-	background: #000;	
+	border-radius: 12px;	
+    background-color: rgba(0,0,0,0.7);
 	text-align: center;		
-	border: 2px solid #f00;
-	box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);	
+	border: 2px solid rgb(82,181,75);
+	box-shadow: 0 0 20px rgba(82, 181, 75, 0.8);		
 }
 
 .message {
@@ -430,9 +431,11 @@ input:hover {
  	white-space: nowrap;	
 }
 
+/* user views define the left menu area */
+
 .user-views {
 	display: inline-block;
-	min-width: 180px;
+	min-width: 280px;
 	height: 480px;	
 	margin-right: 5px;
  	overflow: hidden;	
@@ -443,13 +446,13 @@ input:hover {
 
 .user-views-column {
 	display: block;
-	width: 180px;	
+	width: 280px;	
 	float: left;
 }
 
 .user-views-item {
 	display: block;
-	width: 140px;
+	width: 200px;
 	height: 40px;
 	margin: 5px;
 	padding: 10px;
@@ -457,7 +460,7 @@ input:hover {
 	color: #fff;
 	background-color: rgba(40, 40, 40, 0.3);
 	border: 2px solid transparent;
-	font-size: 20px;
+	font-size: 30px;
 }
 
 .user-views-item:focus {
@@ -474,7 +477,7 @@ input:hover {
 }
 
 .user-views-item-name {
-	width: 140px;
+	width: 200px;
 	height: 40px;	
 	display: block;
 	text-align: center;
@@ -499,7 +502,7 @@ input:hover {
 }
 
 .index-item {
-	font-size: 19px;
+	font-size: 29px;
 	display: inline-block;
 	width: 26px;	
 	border: 2px solid transparent;
@@ -560,7 +563,7 @@ input:hover {
 
 .latest-items-header {
 	color: #f9f9f9;
-	font-size: 19px;
+	font-size: 25px;
 	padding: 1px 1px 10px 15px;	
 	text-transform: uppercase;
 }
@@ -584,7 +587,7 @@ input:hover {
 
 .latest-items-footer {
 	clear: both;
-	font-size: 19px;
+	font-size: 24px;
 	padding: 1px 20px 10px 15px;	
 	text-align: right;
 }
@@ -711,11 +714,12 @@ input:hover {
 }
 
 #details .title {
+	font-size: 34px;
 	font-weight: bold;	
 }
 
 #details .subtitle {
-	font-size: 20px;
+	font-size: 24px;
 	color: #eee;	
 }
 

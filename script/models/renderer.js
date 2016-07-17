@@ -403,7 +403,8 @@ RENDERER.prototype.userItem = function(data, settings) {
 				[{
 					nodeName: "div",
 					className: imageClass,
-					style: {
+					style: 
+					{
 						backgroundImage: "url(" + emby.getImageUrl({'itemId': imageId, tag: imageTag, imageType: imageType, height: 600, addPlayedIndicator: item.UserData.Played ? true : false}) + ")" 	
 					}
 				}]

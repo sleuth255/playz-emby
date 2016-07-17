@@ -309,24 +309,24 @@ DOM.prototype.focus = function(query) {
 	if (query) {
 		var node = this.querySelector(query);	
 		if (node) {		
-			var elmnt = document.getElementById("view");
+			var view = this.querySelector("#view");
 			var rect = node.getBoundingClientRect();
 			if (rect.left < 0)
 			{	
-			  	elmnt.scrollLeft-= (rect.left*-1) + 5;
+			  	view.scrollLeft-= (rect.left*-1) + 5;
 			}
 			else
 			if (rect.right > window.innerWidth)
 			{
-			   	elmnt.scrollLeft += (rect.right - window.innerWidth + 5);
+			   	view.scrollLeft += (rect.right - window.innerWidth + 5);
 			}
 			node.focus();
 			return node;
 		}
-		var elmnt = document.getElementById("viewItem_0_0");
+		var elmnt = this.querySelector("#viewItem_0_0");
 		if (elmnt) // homescreen only
 		{
-		    document.getElementById("view").scrollLeft = 0;
+			this.querySelector("#view").scrollLeft = 0;
 		    elmnt.focus();
 		}
 	}

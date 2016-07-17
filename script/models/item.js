@@ -16,44 +16,8 @@ Item.prototype.load = function(id, settings) {
 	dom.show("#homeLink");
 	dom.empty("#details");
 						
-	dom.html("#view", {
-		nodeName: "div",
-		className: "item-view",
-		id: "item",
-		childNodes: [{
-			nodeName: "div",
-			className: "user-views",
-			id: "userViews",
-			childNodes: [{
-				nodeName: "div",
-				className: "user-views-column",
-				id: "userViews_0",
-				childNodes: [{
-					nodeName: "a",
-					className: "user-views-item",
-					href: "#",
-					id: "viewPlay",
-					dataset: {
-						keyUp: "#homeLink a",
-						keyDown: "#all",
-						keyRight: "#viewItem_1_0, a.latest-item"	
-					},
-					childNodes: [{
-						nodeName: "span",
-						className: "user-views-item-name glyphicon play",
-						text: ""
-					}]					
-				}]
-			}]
-		}, {
-			nodeName: "div",
-			className: "item-content",
-			id: "itemContent"
-		}]
-	});	
 
-	dom.delegate("#item", "a", "keydown", navigation);
-		
+
 	emby.getUserItem({
 		id: id,
 		success: displayItem,
@@ -62,6 +26,59 @@ Item.prototype.load = function(id, settings) {
 
 	function displayItem(data) {
 		self.data = data;
+		
+		if (data.Type == "Series" || data.Type == "Season")
+		{
+			dom.html("#view", {
+				nodeName: "div",
+				className: "item-view",
+				id: "item",
+				childNodes: [{
+					nodeName: "div",
+					className: "item-content",
+					id: "itemContent"
+				}]
+			});
+		}
+		else
+		{
+		dom.html("#view", {
+			nodeName: "div",
+			className: "item-view",
+			id: "item",
+			childNodes: [{
+				nodeName: "div",
+				className: "user-views",
+				id: "userViews",
+				childNodes: [{
+					nodeName: "div",
+					className: "user-views-column",
+					id: "userViews_0",
+					childNodes: [{
+						nodeName: "a",
+						className: "user-views-item",
+						href: "#",
+						id: "viewPlay",
+						dataset: {
+							keyUp: "#homeLink a",
+							keyDown: "#all",
+							keyRight: "a.latest-item"	
+						},
+						childNodes: [{
+							nodeName: "span",
+							className: "user-views-item-name glyphicon play",
+							text: ""
+						}]					
+					}]
+				}]
+			}, {
+				nodeName: "div",
+				className: "item-content",
+				id: "itemContent"
+			}]
+		});
+		}
+		
 		
 		if (data.BackdropImageTags && data.BackdropImageTags[0]) {
 			dom.css("#poster", {
@@ -122,11 +139,14 @@ Item.prototype.load = function(id, settings) {
 				break;				
 		}	
 		
-		focus("#userViews a:first-child");	
+		if (data.Type != "Series" && data.Type != "Season")
+			focus("#userViews a:first-child");	
+
 		dom.on("#viewPlay", "click", function(event) {
 			dom.dispatchCustonEvent(document, "playItem", self.data);
 		});
-			
+
+		dom.delegate("#item", "a", "keydown", navigation);
 	}
 
 	function displayUserItemChildren(data) {
@@ -140,6 +160,8 @@ Item.prototype.load = function(id, settings) {
 		dom.delegate("#item", "a.latest-item", "click", function(event) {
 			dom.dispatchCustonEvent(document, "mediaItemSelected", event.delegateTarget.dataset);
 		});	
+        focus(".latest-item");
+		dom.delegate("#item", "a.latest-item", "keydown", navigation);
 	}
 
 	function navigation(event) {
