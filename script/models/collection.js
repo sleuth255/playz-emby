@@ -7,6 +7,7 @@ function Collection() {
 	this.backdrops;
 	
 	this.startIndex;
+	this.currentIndex = "A";
 	this.limit;
 	this.scroll;
 	this.totalRecordCount;
@@ -492,7 +493,7 @@ Collection.prototype.load = function(data, settings) {
 				indexFocus("#index-" + (index-1));
 				break;
 			case keys.KEY_UP: 
-				collectionFocus(dom.data("#view", "lastFocus"));
+				collectionFocus();
 				break;
 			case keys.KEY_RIGHT: 
 				indexFocus("#index-" + (index+1));
@@ -517,8 +518,7 @@ Collection.prototype.load = function(data, settings) {
 				var view = dom.querySelector("#view");
 				view.scrollLeft = Math.floor((count/2) * columnWidth);
 				dom.removeClass(".index-item", "index-current");
-				highlightIndex(index);			
-				dom.data("#view", "lastFocus", ".column-" + index + " a:last-child")
+				highlightIndex(index);	
 			},
 			error: error				
 		});
@@ -591,7 +591,7 @@ Collection.prototype.load = function(data, settings) {
 		
 		scrollLeft = event.currentTarget.scrollLeft;				
 		columnLast = columnCurrent;
-	}
+}
 
 	function clear(start, end) {
 		for(var i = start; i <= end; i++) {
@@ -643,7 +643,8 @@ Collection.prototype.load = function(data, settings) {
 		} else {
 			dom.addClass("#collectionIndex a[data-index='" + index + "']", "index-current");
 			dom.data("#collectionIndex", "lastFocus", "#collectionIndex a[data-index='" + index + "']");	
-		}		
+		}
+		self.currentIndex = index;
 	}
 	
 	function indexFocus(query) {
@@ -676,10 +677,22 @@ Collection.prototype.load = function(data, settings) {
 		}
 	}
 					
-	function collectionFocus(query) {
-		var node = dom.querySelector(query);
+	function collectionFocus() {
+		var index = self.currentIndex;
+		if (index != "sym")
+		{
+		   var child = "a:first-child";
+		   var idx = index.charCodeAt(0);
+		   for(var node; idx > 64 && !(node = dom.querySelector(".column-" + String.fromCharCode(idx)  + " " + child));idx--)
+		   {
+			    child = "a:last-child";
+		   };
+		}
+		else
+			node = dom.querySelector(".column-sym a:first-child");
+
 		if (node)
-		    dom.focus(query);
+		    node.focus();
 		else
 		{
 			playerpopup.show({

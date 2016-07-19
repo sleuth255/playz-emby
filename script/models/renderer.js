@@ -60,12 +60,12 @@ RENDERER.prototype.userAllItems = function(data, settings) {
 			dom.data("#" + id, "count", data.Items.length);
 		}
 					
+		
 		data.Items.forEach(function(item, index) {	
 			var column = Math.floor((startIndex + index) / 2);
 			var row = (startIndex + index) % 2;
 			var cid = "c_" + id + "_" + column;
 			var character = /^[a-zA-Z]$/.test(item.SortName.toUpperCase().charAt(0)) ? item.SortName.toUpperCase().charAt(0) : "sym";
-																
 			if (!dom.exists("#" + cid)) {
 				dom.append("#" + id, {
 					nodeName: "div",
