@@ -233,14 +233,15 @@ Player.prototype.close = function() {
 	dom.remove("#player");	
 	dom.remove("#video-controls");
 };
+
 Player.prototype.skip = function() {
 	var video = document.getElementById("video");
-	video.currentTime += 60;
+	video.currentTime += prefs.fwdSkip;
 };
 
 Player.prototype.backskip = function() {
 	var video = document.getElementById("video");
-	video.currentTime -= 30;
+	video.currentTime -= prefs.backSkip;
 };
 
 Player.prototype.play = function() {

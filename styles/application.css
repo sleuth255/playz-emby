@@ -220,6 +220,15 @@ a {
 	background: #000 url("../images/screenplay-logo-full-stacked.png") no-repeat center center;
 }
 
+#screenplaySettings {
+	position: relative;
+	top: +200px;
+	left: +500px;
+	font-size: 30px;
+	border-spacing: 10px;
+	color: #fff;
+}
+
 #serverSettings, #userLoginSettings {
 	position: absolute;
 	top: 0;
@@ -297,6 +306,20 @@ input:hover {
 
 .key-field {
 	width: 650px;
+	border: 2px solid #555;
+	font-size: 24px;
+	color: #fff;
+	padding: 10px 5px; 
+	border-radius: 5px;		
+}
+
+.display-label {
+	font-size: 24px;
+	color: #fff;
+}
+
+.display-field {
+	width: 50px;
 	border: 2px solid #555;
 	font-size: 24px;
 	color: #fff;
@@ -450,7 +473,47 @@ input:hover {
 	float: left;
 }
 
-.user-views-item {
+.settings-submit {
+	display: block;
+	width: 200px;
+	height: 60px;
+	margin: 5px;
+	padding: 10px;
+	text-decoration: none;
+	color: #fff;
+	background-color: rgba(40, 40, 40, 0.3);
+	border: 2px solid rgba(82, 181, 75, 1);	
+	font-size: 30px;
+	
+}
+.settings-submit:hover {
+	display: block;
+	width: 200px;
+	height: 60px;
+	margin: 5px;
+	padding: 10px;
+	text-decoration: none;
+	color: #fff;
+	background-color: rgba(82, 181, 75, 0.3);
+	border: 2px solid rgba(82, 181, 75, 1);	
+	font-size: 30px;
+	
+}
+.settings-submit:focus {
+	display: block;
+	width: 200px;
+	height: 60px;
+	margin: 5px;
+	padding: 10px;
+	text-decoration: none;
+	color: #fff;
+	background-color: rgba(82, 181, 75, 0.3);
+	border: 2px solid rgba(82, 181, 75, 1);	
+	font-size: 30px;
+	
+}
+
+.user-views-item, .user-views-item-settings {
 	display: block;
 	width: 200px;
 	height: 40px;
@@ -463,14 +526,14 @@ input:hover {
 	font-size: 30px;
 }
 
-.user-views-item:focus {
+.user-views-item:focus, .user-views-item-settings:focus {
 	outline: none;
 	background-color: rgba(82, 181, 75, 0.3);	
 	border: 2px solid rgba(82, 181, 75, 1);	
 	box-shadow: 0 0 20px rgba(82, 181, 75, 0.8);	
 }
 
-.user-views-item:hover {
+.user-views-item:hover, .user-views-item-settings:hover {
 	outline: none;
 	border: 2px solid rgba(82, 181, 75, 0.5);	
 	box-shadow: 0 0 20px rgba(82, 181, 75, 0.3);	
@@ -890,3 +953,10 @@ button:hover {
 .info-button:hover {
 	color: #999;
 }
+.viewItem_highlight {
+	outline: none;
+	border: 2px solid rgba(82, 181, 75, 1);	
+	box-shadow: 0 0 20px rgba(82, 181, 75, 0.8);		
+}
+
+

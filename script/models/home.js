@@ -19,6 +19,8 @@ Home.prototype.load = function() {
 	dom.show("#server");
 	dom.show("#user");
 	dom.hide("#homeLink");
+//	if (dom.exists("#screenplaySettings"))
+//	    dom.remove("#screenplaySettings");
 					
 	dom.html("#view", {
 		nodeName: "div",
@@ -158,12 +160,12 @@ Home.prototype.load = function() {
 		dom.append("#userViews_" + currentColumn, {
 			nodeName: "a",
 			href: "#",
-			className: "user-views-item user-views-item-settings",
+			className: "user-views-item-settings",
 			id: "viewItem_" + currentColumn + "_" + row,
 			dataset: {
 				id: "viewItem_settings",
 				collectionType: "settings",
-				name: "Emby Settings",
+				name: "Settings",
 				limit: limit,	
 				keyUp: row == 0 ? ".server-link" : "#viewItem_" + currentColumn + "_" + (row - 1),
 				keyRight: currentColumn ==  columnCount ? "#latestItemSet_0 a" : "#viewItem_" + (currentColumn + 1) + "_" + row + ", #latestItemSet_0 a",
@@ -179,6 +181,9 @@ Home.prototype.load = function() {
 		});		
 		
 // End Settings Logic	
+		dom.on(".user-views-item-settings", "click", function(event) {
+			dom.dispatchCustonEvent(document, "userPrefsSelected", this.dataset);
+		});
 		dom.on(".user-views-item", "click", function(event) {
 			dom.dispatchCustonEvent(document, "userViewSelected", this.dataset);
 		});		
@@ -250,7 +255,7 @@ Home.prototype.load = function() {
 			return;
 		}
 					
-		if (dom.hasClass(self, "user-views-item")) {	
+		if (dom.hasClass(self, "user-views-item") || dom.hasClass(self, "user-views-item-settings")) {	
 			switch (event.which) {
 				case keys.KEY_LEFT: 
 					focus(dom.data(self, "keyLeft"));

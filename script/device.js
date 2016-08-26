@@ -6,7 +6,7 @@
 var device = new DEVICE();
 
 function DEVICE() {
-	this.client = "PLAYz EMBY";
+	this.client = "screenplay";
 	this.name = "LG Smart TV";
 	this.id = storage.exists("emby.device.id") ? storage.get("emby.device.id") : storage.set("emby.device.id", guid.create());
 	this.version = "0.0.0.2";

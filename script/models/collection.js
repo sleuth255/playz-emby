@@ -7,7 +7,7 @@ function Collection() {
 	this.backdrops;
 	
 	this.startIndex;
-	this.currentIndex = "A";
+	this.currentIndex;
 	this.limit;
 	this.scroll;
 	this.totalRecordCount;
@@ -683,9 +683,9 @@ Collection.prototype.load = function(data, settings) {
 		{
 		   var child = "a:first-child";
 		   var idx = index.charCodeAt(0);
-		   for(var node; idx > 64 && !(node = dom.querySelector(".column-" + String.fromCharCode(idx)  + " " + child));idx--)
+		   for(var node; idx > 64 && !(node = dom.querySelector(".column-" + String.fromCharCode(idx)  + " " + child)) ;idx--)
 		   {
-			    child = "a:last-child";
+			   	   child = "a:last-child";
 		   };
 		}
 		else

@@ -15,6 +15,7 @@
 	<script type="text/javascript" src="./script/device.js"></script>
 
 	<script type="text/javascript" src="./script/models/renderer.js"></script>	
+	<script type="text/javascript" src="./script/models/prefs.js"></script>		
 	<script type="text/javascript" src="./script/models/splash.js"></script>		
 	<script type="text/javascript" src="./script/models/server.js"></script>
 	<script type="text/javascript" src="./script/models/user.js"></script>
@@ -43,6 +44,7 @@
 					storage.remove("emby.settings.current.server");
 					storage.remove("emby.settings.current.user");
 					storage.remove("emby.settings.servers");	
+					storage.remove("emby.settings.prefs");	
 					location.reload(true);
 				}
 			});
@@ -56,6 +58,10 @@
 					action: "home"
 				}, "home");
 				home.load();
+			});
+
+			dom.on(document, "userPrefsSelected", function(event) {
+				prefs.clientSettings();
 			});
 
 			dom.on(document, "userViewSelected", function(event) {
@@ -135,6 +141,10 @@
 					action: "home"
 				}, "home");							
 				collection.close();			
+				if (dom.exists("#screenplaySettings"))
+				{
+				    prefs.clientSettingsClose();
+				}
 				home.load();
 			});
 
@@ -144,6 +154,10 @@
 						action: "home"
 					}, "home");
 					collection.close();			
+					if (dom.exists("#screenplaySettings"))
+					{
+						prefs.clientSettingsClose();
+					}
 					home.load();
 				}							
 			});
@@ -218,6 +232,7 @@
 				}
 			});	
 								
+			prefs.load();
 			splash.show({
 				duration: 3000,
 				end: function() {

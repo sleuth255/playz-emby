@@ -3,7 +3,7 @@
     "iconColor": "black",
     "icon": "images/screenplay icon 80x80.png",
     "main": "index.html",
-    "id": "theparadigmgrid.emby.playz",
+    "id": "theparadigmgrid.screenplay",
     "title": "screenplay",
     "type": "web",
     "version": "0.0.1"
