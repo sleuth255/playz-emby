@@ -236,12 +236,12 @@ Player.prototype.close = function() {
 
 Player.prototype.skip = function() {
 	var video = document.getElementById("video");
-	video.currentTime += prefs.fwdSkip;
+	video.currentTime += Math.floor(prefs.fwdSkip);
 };
 
 Player.prototype.backskip = function() {
 	var video = document.getElementById("video");
-	video.currentTime -= prefs.backSkip;
+	video.currentTime -= Math.floor(prefs.backSkip);
 };
 
 Player.prototype.play = function() {
