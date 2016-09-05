@@ -214,7 +214,8 @@ Prefs.prototype.clientSettings = function(){
 		self.save();
 		dom.querySelector("#viewItem_0_0").blur();
 		dom.querySelector("#viewItem_1_4").focus();
-		
+		currentColumn = 1;
+		currentRow = 4;
 	}
 	function doViewItem_1_0_click (event){
 		currentColumn = 1
