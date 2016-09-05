@@ -261,16 +261,14 @@ Prefs.prototype.clientSettings = function(){
 						currentColumn--;
 					break;
 				case keys.KEY_UP: 
-					if (currentColumn > 0)
-					    if (currentRow == 0)
-						    currentRow = rowCount;
-					    else
-						    currentRow--;
-					else
-					{
-						homeFocus = true; 
-					}
-					break;
+				    if (currentRow < 1)
+				    {	
+					    homeFocus = true;
+					    currentRow = -1
+				    }
+				    else
+					    currentRow--;
+				    break;
 				case keys.KEY_RIGHT:
 					currentRow = 0;
 					if (currentColumn ==  columnCount)
@@ -280,12 +278,12 @@ Prefs.prototype.clientSettings = function(){
 					break;
 				case keys.KEY_DOWN: 
 					if (currentColumn > 0)
-					    if (currentRow == rowCount)
+						if (currentRow == rowCount)
 						    currentRow = 0;
 					    else
 						    currentRow++;
 					else
-					    settingsFocus = true;
+						currentRow = 0;
 					break;		
 				default:
 					return;
@@ -298,6 +296,11 @@ Prefs.prototype.clientSettings = function(){
 //			duration: 2000,
 //			text: query
 //		});	
+		for(var col = 0;col <= columnCount; col++)
+			for (var row = 0; row <= rowCount; row++)
+				if (dom.hasClass("#viewItem_"+ col + "_" +row, "viewItem_highlight"))
+					dom.removeClass("#viewItem_"+ col + "_" +row, "viewItem_highlight");
+
 		if (homeFocus)
 		{	
 			dom.querySelector("#viewItem_1_4").blur();
@@ -316,10 +319,6 @@ Prefs.prototype.clientSettings = function(){
 		else
 			dom.querySelector("#viewItem_1_4").blur();
 		
-		for(var col = 0;col <= columnCount; col++)
-			for (var row = 0; row <= rowCount; row++)
-				if (dom.hasClass("#viewItem_"+ col + "_" +row, "viewItem_highlight"))
-					dom.removeClass("#viewItem_"+ col + "_" +row, "viewItem_highlight");
 		dom.addClass(query,"viewItem_highlight");
 		currentHighlight = query;
 	}

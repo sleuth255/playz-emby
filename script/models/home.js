@@ -19,8 +19,10 @@ Home.prototype.load = function() {
 	dom.show("#server");
 	dom.show("#user");
 	dom.hide("#homeLink");
-//	if (dom.exists("#screenplaySettings"))
-//	    dom.remove("#screenplaySettings");
+	if (dom.exists("#screenplaySettings"))
+	{
+	    prefs.clientSettingsClose();
+	}
 					
 	dom.html("#view", {
 		nodeName: "div",

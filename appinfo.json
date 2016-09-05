@@ -2,9 +2,11 @@
     "vendor": "The Paradigm Grid",
     "iconColor": "black",
     "icon": "images/screenplay icon 80x80.png",
+    "largeIcon": "images/screenplay icon 80x80.png",
     "main": "index.html",
+    "bgImage": "images/screenplay-logo-full-stacked.png",
     "id": "theparadigmgrid.screenplay",
     "title": "screenplay",
     "type": "web",
-    "version": "0.0.1"
+    "version": "1.0.0"
 }

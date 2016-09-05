@@ -65,41 +65,41 @@
 			});
 
 			dom.on(document, "userViewSelected", function(event) {
-				history.pushState({
-					action: "summary",
-					id: event.detail.id,
-					name: event.detail.name,
-					collectionType: event.detail.collectionType
-				}, "summary");
+//				history.pushState({
+//					action: "summary",
+//					id: event.detail.id,
+//					name: event.detail.name,
+//					collectionType: event.detail.collectionType
+//				}, "summary");
 				summary.load(event.detail);
 			});
 
 			dom.on(document, "userViewMoreSelected", function(event) {	
-				history.pushState({
-					action: "summary",					
-					id: event.detail.id,
-					name: event.detail.name,
-					collectionType: event.detail.collectionType
-				}, "summary");							
+//				history.pushState({
+//					action: "summary",					
+//					id: event.detail.id,
+//					name: event.detail.name,
+//					collectionType: event.detail.collectionType
+//				}, "summary");							
 				summary.load(event.detail);
 			});				
 				
 			dom.on(document, "allCollectionSelected", function(event) {	
-				history.pushState({
-					action: "all",					
-					id: event.detail.id,
-					name: event.detail.name,
-					collectionType: event.detail.collectionType,
-					imageTag: event.detail.imageTag
-				}, "all");							
+//				history.pushState({
+//					action: "all",					
+//					id: event.detail.id,
+//					name: event.detail.name,
+//					collectionType: event.detail.collectionType,
+//					imageTag: event.detail.imageTag
+//				}, "all");							
 				collection.load(event.detail);
 			});					
 
 			dom.on(document, "mediaItemSelected", function(event) {
-				history.pushState({
-					action: "item",					
-					id: event.detail.id		
-				}, "item");
+//				history.pushState({
+//					action: "item",					
+//					id: event.detail.id		
+//				}, "item");
 				item.load(event.detail.id);
 			});						
 
@@ -141,10 +141,6 @@
 					action: "home"
 				}, "home");							
 				collection.close();			
-				if (dom.exists("#screenplaySettings"))
-				{
-				    prefs.clientSettingsClose();
-				}
 				home.load();
 			});
 
@@ -154,10 +150,6 @@
 						action: "home"
 					}, "home");
 					collection.close();			
-					if (dom.exists("#screenplaySettings"))
-					{
-						prefs.clientSettingsClose();
-					}
 					home.load();
 				}							
 			});
