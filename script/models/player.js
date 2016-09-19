@@ -12,6 +12,7 @@ Player.prototype.load = function(data, settings) {
 	var self = this;
 	var item = data;
 	var time = 0;
+	var videoStarting = true;
 	
 	if (item.VideoType && item.VideoType == "VideoFile") {				
 		dom.append("body", {
@@ -51,6 +52,7 @@ Player.prototype.load = function(data, settings) {
 			    }]
 		});	
 
+
 		dom.append("#video", {
 			nodeName: "source",
 			src: emby.getVideoStreamUrl({
@@ -76,7 +78,32 @@ Player.prototype.load = function(data, settings) {
 		var seekBar = document.getElementById("seek-bar");
 
 		
-		video.onplay = function() {
+		video.addEventListener("playing", function(event) {
+			if (prefs.resumeTicks > 0)
+			{
+				//get seconds from ticks
+				var ts = prefs.resumeTicks / 10000000;
+				prefs.resumeTicks = 0;
+
+				//conversion based on seconds
+				var hh = Math.floor( ts / 3600);
+				var mm = Math.floor( (ts % 3600) / 60);
+				var ss = Math.floor(  (ts % 3600) % 60);
+
+				//prepend '0' when needed
+				hh = hh < 10 ? '0' + hh : hh;
+				mm = mm < 10 ? '0' + mm : mm;
+				ss = ss < 10 ? '0' + ss : ss;
+
+				//use it
+				var str = hh + ":" + mm + ":" + ss;
+				playerpopup.show({
+					duration: 2000,
+					text: "Resuming Playback at " + str
+				});	
+				video.currentTime = Math.floor(ts)
+			}
+			
 			time = Math.floor(event.target.currentTime);	
 			var ticks = time * 10000000;
 
@@ -91,11 +118,26 @@ Player.prototype.load = function(data, settings) {
 				}
 			});
 							
-			console.log("Play Started - " + time + " : " + ticks);
-		};
+		});
 		
-		video.ontimeupdate = function(event) {
-			if (Math.floor(event.target.currentTime) > time + 4) {
+		video.addEventListener("ended", function(event) {
+			self.close();
+		});
+	
+		video.addEventListener("timeupdate", function(event) {
+		    // update the time/duration and slider values
+		    var durmin = Math.floor(video.duration) / 60;
+			var durhr = Math.floor(durmin / 60);
+			durmin = ('0' + ((durmin % 60).toFixed(0))).slice(-2);
+				
+			var curmin = Math.floor(video.currentTime) / 60;
+			var curhr = Math.floor(curmin / 60);
+			curmin = ('0' + ((curmin % 60).toFixed(0))).slice(-2);
+
+			infoButton.innerHTML = curhr+":"+curmin+"/"+durhr+ ":"+durmin; 
+			seekBar.value = (100 / video.duration) * video.currentTime;
+
+			if (Math.floor(video.currentTime) > time + 4) {
 				time = Math.floor(event.target.currentTime);	
 				var ticks = time * 10000000;
 					
@@ -112,11 +154,7 @@ Player.prototype.load = function(data, settings) {
 					
 
 			}
-			// Update the slider value
-			var value = (100 / video.duration) * video.currentTime;
-			seekBar.value = value;
-			console.log("ReportPlaybackProgress - " + time + " : " + ticks);
-		};
+		});
 
 		video.onpause = function() {
 			time = Math.floor(event.target.currentTime);	
@@ -185,32 +223,6 @@ Player.prototype.load = function(data, settings) {
 			self.showControls({duration: 6000});
 		});
 		
-		video.addEventListener("timeupdate", function() {
-
-			// update the time/duration and slider values
-			var durmin = video.duration / 60;
-			var durhr = (durmin - (durmin % 60)) / 60;
-			durmin = durmin % 60;
-			
-			var curmin = video.currentTime / 60;
-			var curhr = (curmin - (curmin % 60)) / 60;
-			curmin = curmin % 60;
-
-			durmin = durmin.toFixed(0);
-			durhr = durhr.toFixed(0);
-			curmin = curmin.toFixed(0);
-			curhr = curhr.toFixed(0);
-			if (durmin.length < 2)
-				durmin = "0" + durmin;
-			if (curmin.length < 2)
-				curmin = "0" + curmin;
-			var tmpstr = curhr+":"+curmin+"/"+durhr+ ":"+durmin;
-			infoButton.innerHTML = tmpstr;
-
-			var value = (100 / video.duration) * video.currentTime;
-			seekBar.value = value;
-		});
-
 		video.load();
 		video.play();			
 	}
@@ -229,7 +241,7 @@ Player.prototype.close = function() {
 			PositionTicks: ticks,
 			PlayMethod: "DirectStream"
 		}
-	});
+	});	
 	dom.remove("#player");	
 	dom.remove("#video-controls");
 };

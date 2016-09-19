@@ -19,6 +19,8 @@ function Prefs() {
 	this.showSubTitles = false;
 	this.videoBitrate = 10000000;
 	this.audioBitrate = 128000;
+	this.resumeTicks = 0;
+	this.durationTicks = 0;
 };
 
 
@@ -72,14 +74,13 @@ Prefs.prototype.clientSettings = function(){
 	dom.hide("#server");
 	dom.hide("#user");
 	dom.show("#homeLink");
-					
 
 	this.navigation = dom.on("body","keydown",navigation)
 
-    dom.html("#view", {
+	dom.html("#view", {
 		nodeName: "div",
 		className: "home-view",
-		id: "home",
+		id: "home2",
 		childNodes: [{
 			nodeName: "div",
 			className: "user-views-column",
@@ -212,7 +213,6 @@ Prefs.prototype.clientSettings = function(){
 			text: "Settings changed"
 		});	
 		self.save();
-		dom.querySelector("#viewItem_0_0").blur();
 		dom.querySelector("#viewItem_1_4").focus();
 		currentColumn = 1;
 		currentRow = 4;
@@ -246,9 +246,6 @@ Prefs.prototype.clientSettings = function(){
 	}
 	
 	function navigation(event) {
-
-		dom.querySelector("#viewItem_0_0").blur();
-		dom.querySelector(".home-link").blur()
 
 			switch (event.which) {
 			    case keys.KEY_OK:
@@ -293,10 +290,6 @@ Prefs.prototype.clientSettings = function(){
 	}
 	function highlight(query){
 		settingsItemfocus = false;
-//		playerpopup.show({
-//			duration: 2000,
-//			text: query
-//		});	
 		for(var col = 0;col <= columnCount; col++)
 			for (var row = 0; row <= rowCount; row++)
 				if (dom.hasClass("#viewItem_"+ col + "_" +row, "viewItem_highlight"))
@@ -304,7 +297,6 @@ Prefs.prototype.clientSettings = function(){
 
 		if (homeFocus)
 		{	
-			dom.querySelector("#viewItem_1_4").blur();
 			dom.querySelector(".home-link").focus()
 			homeFocus = false;
 			return;

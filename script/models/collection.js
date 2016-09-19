@@ -414,6 +414,8 @@ Collection.prototype.load = function(data, settings) {
 	}
 	
 	function lostFocus(event) {
+		if (dom.exists("#screenplaySettings") || dom.exists("#player"))
+			return;
 		if (event.target.tagName != "A") {
 			dom.focus(dom.data("#view", "lastFocus"));
 		}

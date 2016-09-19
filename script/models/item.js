@@ -7,6 +7,9 @@ function Item() {
 	this.data = {};
 };
 
+Item.prototype.close = function(){
+	dom.remove("#item")
+}
 Item.prototype.load = function(id, settings) {
 	settings = settings || {};
 	var self = this;
@@ -15,8 +18,6 @@ Item.prototype.load = function(id, settings) {
 	dom.hide("#user");
 	dom.show("#homeLink");
 	dom.empty("#details");
-						
-
 
 	emby.getUserItem({
 		id: id,
@@ -42,43 +43,63 @@ Item.prototype.load = function(id, settings) {
 		}
 		else
 		{
-		dom.html("#view", {
-			nodeName: "div",
-			className: "item-view",
-			id: "item",
-			childNodes: [{
-				nodeName: "div",
-				className: "user-views",
-				id: "userViews",
-				childNodes: [{
-					nodeName: "div",
-					className: "user-views-column",
-					id: "userViews_0",
-					childNodes: [{
-						nodeName: "a",
-						className: "user-views-item",
-						href: "#",
-						id: "viewPlay",
-						dataset: {
-							keyUp: "#homeLink a",
-							keyDown: "#all",
-							keyRight: "a.latest-item"	
-						},
-						childNodes: [{
-							nodeName: "span",
-							className: "user-views-item-name glyphicon play",
-							text: ""
-						}]					
-					}]
-				}]
-			}, {
-				nodeName: "div",
-				className: "item-content",
-				id: "itemContent"
-			}]
-		});
+		   dom.html("#view", {
+			   nodeName: "div",
+			   className: "item-view",
+			   id: "item",
+			   childNodes: [{
+				   nodeName: "div",
+				   className: "user-views",
+				   id: "userViews",
+				   childNodes: [{
+					   nodeName: "div",
+					   className: "user-views-column",
+					   id: "userViews_0",
+					   childNodes: [{
+						   nodeName: "a",
+						   className: "user-views-item",
+						   href: "#",
+						   id: "viewPlay",
+						   dataset: {
+							   keyUp: "#homeLink a",
+							   keyDown: "#userViews a:last-child",
+							   keyRight: "a.latest-item"	
+						   },
+						   childNodes: [{
+							   nodeName: "span",
+							   className: "user-views-item-name glyphicon play",
+							   text: ""
+						   }]					
+					   }]
+				   }]
+			   }, {
+				   nodeName: "div",
+				   className: "item-content",
+				   id: "itemContent"
+			   }]
+		   });
+		   if (data.UserData.PlaybackPositionTicks > 0)  // resume data available: show resume button
+		   {
+   		      dom.append("#userViews_0", {
+			      nodeName: "a",
+			      href: "#",
+			      className: "user-views-item",
+			      id: "viewResume",
+			      dataset: {
+				      keyUp: "#userViews a:first-child",
+				      keyDown: "#userViews a:last-child",
+				      keyRight: "a.latest-item"	
+			      },
+			      childNodes: [{
+				      nodeName: "span",
+				      className: "user-views-item-name glyphicon forward",	
+				      text: ""				
+			      }]
+		      });		
+		   }
 		}
 		
+
 		
 		if (data.BackdropImageTags && data.BackdropImageTags[0]) {
 			dom.css("#poster", {
@@ -140,9 +161,19 @@ Item.prototype.load = function(id, settings) {
 		}	
 		
 		if (data.Type != "Series" && data.Type != "Season")
-			focus("#userViews a:first-child");	
+		{
+			focus("#userViews a:first-child");
+		}
+
 
 		dom.on("#viewPlay", "click", function(event) {
+			prefs.durationTicks = data.MediaSources[0].RunTimeTicks;
+			prefs.resumeTicks = 0;
+			dom.dispatchCustonEvent(document, "playItem", self.data);
+		});
+		dom.on("#viewResume", "click", function(event) {
+			prefs.durationTicks = data.MediaSources[0].RunTimeTicks;
+			prefs.resumeTicks = data.UserData.PlaybackPositionTicks;
 			dom.dispatchCustonEvent(document, "playItem", self.data);
 		});
 
@@ -174,6 +205,12 @@ Item.prototype.load = function(id, settings) {
 		}
 		
 		if (dom.hasClass(self, "user-views-item")) {	
+/*
+			playerpopup.show({
+				duration: 5000,
+				text: "Up " + dom.data(self, "keyUp") + " Down: " + dom.data(self, "keyDown")
+			});
+*/
 			switch (event.which) {
 				case keys.KEY_LEFT: 
 					focus(dom.data(self, "keyLeft"));

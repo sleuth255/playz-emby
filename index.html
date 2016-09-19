@@ -36,6 +36,7 @@
 			var item = new Item();
 			var player = new Player();
 			var controlsVisible = false;
+			var firstEvent = true;
 									
 			dom.addClass("body", device.bodyClass);
 			
@@ -105,15 +106,19 @@
 
 			dom.on(document, "playItem", function(event) {
 				controlsVisible = false;
+				firstEvent = true;
 				player.load(event.detail);
 			});	
 
 			window.addEventListener("popstate", function(event) {
-				/*dom.html("#logo", {
-					nodeName: "div",
-					text: event.state.action
-				});*/
-				
+				if (dom.exists("#player"))
+					if (!firstEvent)
+					{	
+						player.close()
+						return;				
+					}
+					else
+						firstEvent = false;
 				if (event.state) {
 					collection.close();
 					switch(event.state.action) {
@@ -134,6 +139,7 @@
 							break;																
 					}
 				}
+				
 			});	
 			
 			dom.on("#homeLink a", "click", function(event) {	
@@ -166,9 +172,10 @@
 				user.login();
 			});
 			
-			document.addEventListener("keydown", function(event) {
-				event.preventDefault();
-				event.stopPropagation();	
+			document.addEventListener("keydown", function(event) 
+			{
+			    if (dom.exists("#screenplaySettings"))
+					return;
 
 				if (dom.exists("#player")) {
 					switch (event.which) {
@@ -205,15 +212,13 @@
 					    case keys.KEY_REWIND:
 						    player.rewind();
 						    return;
+					    case keys.KEY_ESC || keys.KEY.BACK:
+					    	player.close()
+					    	return;
 					    default:
 						    return;
 					}
 				}
-
-				if (event.which == keys.KEY_BACK || event.which == keys.KEY_ESC) {
-					history.back(1);
-					return;
-				}			
 			});
 			
 			dom.on("#view", "mousewheel", function(event) {

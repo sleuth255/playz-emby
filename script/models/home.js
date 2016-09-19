@@ -23,7 +23,8 @@ Home.prototype.load = function() {
 	{
 	    prefs.clientSettingsClose();
 	}
-					
+	if(dom.exists("#home"))
+		return;
 	dom.html("#view", {
 		nodeName: "div",
 		className: "home-view",
@@ -242,6 +243,8 @@ Home.prototype.load = function() {
 	}
 
 	function lostFocus(event) {
+		if (dom.exists("#screenplaySettings") || dom.exists("#player"))
+			return;
 		if (event.target.tagName != "A") {
 			focus(dom.data("#view", "lastFocus"));
 		}
