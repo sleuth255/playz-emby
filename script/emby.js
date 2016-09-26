@@ -251,22 +251,23 @@ EMBY.prototype.getVideoStreamUrl = function(settings) {
 	settings = settings || {};
 		
 	var itemId = settings.itemId;
+	var deviceId = settings.deviceId || this.settings.SessionInfo.DeviceId;
 	var startTimeTicks = Math.floor(prefs.resumeTicks);
 	var videoCodec = settings.videoCodec || "h264";
 	var audioCodec = settings.audioCodec || "aac";
 	var videoBitrate = Math.floor(prefs.videoBitrate) || 10000000;
 	var audioBitrate = Math.floor(prefs.audioBitrate) || 128000;
 	var maxAudioChannels = settings.maxAudioChannels || 5;
-//	var direct = settings.direct || "false";
-	var direct = settings.direct || "true";
+	var direct = settings.direct || "false";
+//	var direct = settings.direct || "true";
 	var extension = settings.extension || "";
 	extension = extension.length > 0 ? "." + extension : extension;
 	
-	return this.settings.ServerUrl + "/Videos/" + itemId + "/stream" + extension + "?static=" + direct + "&mediaSourceId=" + itemId + "&startTimeTicks=" + startTimeTicks + "&videoBitrate=" + videoBitrate + 
-	"&audioBitrate=" + audioBitrate + "&maxAudioChannels=" + maxAudioChannels + "&api_key=" + this.settings.AccessToken;
-
 //	return this.settings.ServerUrl + "/Videos/" + itemId + "/stream" + extension + "?static=" + direct + "&mediaSourceId=" + itemId + "&startTimeTicks=" + startTimeTicks + "&videoBitrate=" + videoBitrate + 
-//	"&videoCodec=" + videoCodec + "&audioCodec=" + audioCodec + "&audioBitrate=" + audioBitrate + "&maxAudioChannels=" + maxAudioChannels + "&api_key=" + this.settings.AccessToken;
+//	"&audioBitrate=" + audioBitrate + "&maxAudioChannels=" + maxAudioChannels + "&api_key=" + this.settings.AccessToken;
+
+	return this.settings.ServerUrl + "/Videos/" + itemId + "/stream" + extension + "?mediaSourceId=" + itemId + "&videoBitrate=" + videoBitrate + 
+	"&videoCodec=" + videoCodec + "&audioCodec=" + audioCodec + "&audioBitrate=" + audioBitrate + "&maxAudioChannels=" + maxAudioChannels + "&api_key=" + this.settings.AccessToken;
 };
 
 EMBY.prototype.getVideoHlsStreamUrl = function(settings) {
@@ -276,9 +277,15 @@ EMBY.prototype.getVideoHlsStreamUrl = function(settings) {
 	var deviceId = settings.deviceId || this.settings.SessionInfo.DeviceId;
 	var videoCodec = settings.videoCodec || "h264";
 	var audioCodec = settings.audioCodec || "aac";
-	var startTimeTicks = 0;
+
+	var t = ""
+	var startTimeSecs = 0;
 	if (prefs.resumeTicks > 0)
-		startTimeTicks = Math.floor(prefs.resumeTicks);
+	{
+		startTimeSecs = Math.floor(prefs.resumeTicks / 10000000);
+		t = "#t=" + startTimeSecs
+	}
+
 	var audioStreamIndex = settings.audioStreamIndex || 1;
 	var videoBitrate = Math.floor(prefs.videoBitrate) || 10000000;
 	var audioBitrate = Math.floor(prefs.audioBitrate) || 128000;
@@ -288,11 +295,22 @@ EMBY.prototype.getVideoHlsStreamUrl = function(settings) {
 	var clientTime = settings.clientTime || "";
 	var profile = settings.profile || "high";
 	var playSessionId = settings.playSessionId || "1c7fddb7712646f9ba6352f8d9afc79e";
-														
+/*														
 	return this.settings.ServerUrl + "/videos/" + itemId + "/master.m3u8?deviceId=" + deviceId + "&mediaSourceId=" + itemId +
-		"&videoCodec=" + videoCodec + "&audioCodec=" + audioCodec + "&starttimeticks=" + startTimeTicks + "&audioStreamIndex=" + audioStreamIndex + "&videoBitrate=" + videoBitrate + 
-		"&audioBitrate=" + audioBitrate + "&maxAudioChannels=" + maxAudioChannels + "&maxHeight=" + maxHeight + "&level=" + level +
-		"&clientTime=" + clientTime + "&profile=" + profile + "&playSessionId=" + playSessionId + "&api_key=" + this.settings.AccessToken;
+	"&videoCodec=" + videoCodec + "&audioCodec=" + audioCodec + "&audioStreamIndex=" + audioStreamIndex + "&videoBitrate=" + videoBitrate + 
+	"&audioBitrate=" + audioBitrate + "&maxAudioChannels=" + maxAudioChannels + "&maxHeight=" + maxHeight + "&level=" + level +
+	"&clientTime=" + clientTime + "&profile=" + profile + "&playSessionId=" + playSessionId + "&api_key=" + this.settings.AccessToken;
+
+	return this.settings.ServerUrl + "/videos/" + itemId + "/master.m3u8?deviceId=" + deviceId + "&mediaSourceId=" + itemId +
+	"&videoCodec=" + videoCodec + "&audioCodec=" + audioCodec + "&audioStreamIndex=" + audioStreamIndex + "&videoBitrate=" + videoBitrate + 
+	"&audioBitrate=" + audioBitrate + "&maxAudioChannels=" + maxAudioChannels + "&maxHeight=" + maxHeight + "&level=" + level +
+	"&clientTime=" + clientTime + "&profile=" + profile + "&playSessionId=" + playSessionId + "&api_key=" + this.settings.AccessToken + t;
+*/	
+	return this.settings.ServerUrl + "/videos/" + itemId + "/master.m3u8?deviceId=" + deviceId + "&mediaSourceId=" + itemId +
+	"&videoCodec=" + videoCodec + "&audioCodec=" + audioCodec + "&audioStreamIndex=" + audioStreamIndex + "&videoBitrate=" + videoBitrate + 
+	"&audioBitrate=" + audioBitrate + "&maxAudioChannels=" + maxAudioChannels + "&maxHeight=" + maxHeight + "&level=" + level +
+	"&clientTime=" + clientTime + "&profile=" + profile + "&api_key=" + this.settings.AccessToken + t;
+
 };
 
 EMBY.prototype.getImageUrl = function(settings) {

@@ -40,16 +40,6 @@
 									
 			dom.addClass("body", device.bodyClass);
 			
-			dom.on(document, "keydown", function(event) {
-				if (event.which == keys.KEY_RED) {
-					storage.remove("emby.settings.current.server");
-					storage.remove("emby.settings.current.user");
-					storage.remove("emby.settings.servers");	
-					storage.remove("emby.settings.prefs");	
-					location.reload(true);
-				}
-			});
-												
 			dom.on(document, "serverOpened", function(event) {
 				user.load(event.detail); 
 			});
@@ -58,49 +48,53 @@
 				history.pushState({
 					action: "home"
 				}, "home");
+				dom.remove("#home")
 				home.load();
 			});
 
 			dom.on(document, "userPrefsSelected", function(event) {
+				history.pushState({
+					action: "home"
+				}, "home");
 				prefs.clientSettings();
 			});
 
 			dom.on(document, "userViewSelected", function(event) {
-//				history.pushState({
-//					action: "summary",
-//					id: event.detail.id,
-//					name: event.detail.name,
-//					collectionType: event.detail.collectionType
-//				}, "summary");
+				history.pushState({
+					action: "summary",
+					id: event.detail.id,
+					name: event.detail.name,
+					collectionType: event.detail.collectionType
+				}, "summary");
 				summary.load(event.detail);
 			});
 
 			dom.on(document, "userViewMoreSelected", function(event) {	
-//				history.pushState({
-//					action: "summary",					
-//					id: event.detail.id,
-//					name: event.detail.name,
-//					collectionType: event.detail.collectionType
-//				}, "summary");							
+				history.pushState({
+					action: "summary",					
+					id: event.detail.id,
+					name: event.detail.name,
+					collectionType: event.detail.collectionType
+				}, "summary");							
 				summary.load(event.detail);
 			});				
 				
 			dom.on(document, "allCollectionSelected", function(event) {	
-//				history.pushState({
-//					action: "all",					
-//					id: event.detail.id,
-//					name: event.detail.name,
-//					collectionType: event.detail.collectionType,
-//					imageTag: event.detail.imageTag
-//				}, "all");							
+				history.pushState({
+					action: "all",					
+					id: event.detail.id,
+					name: event.detail.name,
+					collectionType: event.detail.collectionType,
+					imageTag: event.detail.imageTag
+				}, "all");							
 				collection.load(event.detail);
 			});					
 
 			dom.on(document, "mediaItemSelected", function(event) {
-//				history.pushState({
-//					action: "item",					
-//					id: event.detail.id		
-//				}, "item");
+				history.pushState({
+					action: "item",					
+					id: event.detail.id		
+				}, "item");
 				item.load(event.detail.id);
 			});						
 
@@ -112,13 +106,16 @@
 
 			window.addEventListener("popstate", function(event) {
 				if (dom.exists("#player"))
-					if (!firstEvent)
-					{	
-						player.close()
-						return;				
-					}
-					else
+					if (firstEvent)
+					{
 						firstEvent = false;
+						return;
+					}
+					else	
+			    	{	
+				    	player.close()
+				    	return;				
+			    	}
 				if (event.state) {
 					collection.close();
 					switch(event.state.action) {
@@ -143,6 +140,8 @@
 			});	
 			
 			dom.on("#homeLink a", "click", function(event) {	
+				event.stopPropagation()
+				event.preventDefault()
 				history.pushState({
 					action: "home"
 				}, "home");							
@@ -150,16 +149,6 @@
 				home.load();
 			});
 
-			dom.on("#homeLink a", "keydown", function(event) {	
-				if (event.which == keys.KEY_OK) {
-					history.pushState({
-						action: "home"
-					}, "home");
-					collection.close();			
-					home.load();
-				}							
-			});
-										
 			dom.on("#logo", "click", function(event) {			
 				location.reload(true);
 			});
@@ -176,6 +165,14 @@
 			{
 			    if (dom.exists("#screenplaySettings"))
 					return;
+
+/*				if (event.which == keys.KEY_RED) {
+					storage.remove("emby.settings.current.server");
+					storage.remove("emby.settings.current.user");
+					storage.remove("emby.settings.servers");	
+					storage.remove("emby.settings.prefs");	
+					location.reload(true);
+				}*/
 
 				if (dom.exists("#player")) {
 					switch (event.which) {

@@ -51,8 +51,10 @@ Player.prototype.load = function(data, settings) {
 				    }]
 			    }]
 		});	
-
-
+		var node = dom.querySelector("#video");
+		node.setAttribute("crossorigin", "anonymous")
+		node.setAttribute("webkit-playsinline","")
+/*
 		dom.append("#video", {
 			nodeName: "source",
 			src: emby.getVideoStreamUrl({
@@ -61,7 +63,7 @@ Player.prototype.load = function(data, settings) {
 			}),
 			"type": mime.lookup(item.MediaSources[0].Container)
 		});
-	
+*/	
 		dom.append("#video", {
 			nodeName: "source",
 			src: emby.getVideoHlsStreamUrl({
@@ -101,7 +103,7 @@ Player.prototype.load = function(data, settings) {
 					duration: 2000,
 					text: "Resuming Playback at " + str
 				});	
-				video.currentTime = Math.floor(ts)
+//				video.currentTime = Math.floor(ts)
 			}
 			
 			time = Math.floor(event.target.currentTime);	
@@ -126,13 +128,13 @@ Player.prototype.load = function(data, settings) {
 	
 		video.addEventListener("timeupdate", function(event) {
 		    // update the time/duration and slider values
-		    var durmin = Math.floor(video.duration) / 60;
-			var durhr = Math.floor(durmin / 60);
-			durmin = ('0' + ((durmin % 60).toFixed(0))).slice(-2);
+			var durhr = Math.floor(video.duration / 3600);
+		    var durmin = Math.floor((video.duration % 3600) / 60);
+			durmin = durmin < 10 ? '0' + durmin : durmin;
 				
-			var curmin = Math.floor(video.currentTime) / 60;
-			var curhr = Math.floor(curmin / 60);
-			curmin = ('0' + ((curmin % 60).toFixed(0))).slice(-2);
+			var curhr = Math.floor(video.currentTime / 3600);
+		    var curmin = Math.floor((video.currentTime % 3600) / 60);
+			curmin = curmin < 10 ? '0' + curmin : curmin;
 
 			infoButton.innerHTML = curhr+":"+curmin+"/"+durhr+ ":"+durmin; 
 			seekBar.value = (100 / video.duration) * video.currentTime;
@@ -156,7 +158,7 @@ Player.prototype.load = function(data, settings) {
 			}
 		});
 
-		video.onpause = function() {
+		video.onpause = function(event) {
 			time = Math.floor(event.target.currentTime);	
 			var ticks = time * 10000000;
 

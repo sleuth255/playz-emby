@@ -200,6 +200,8 @@ Prefs.prototype.clientSettings = function(){
 		dom.focus("#viewItem_0_0");
 
 	function userViewsItemSettings (event){
+		event.preventDefault();
+		event.stopPropagation();
 		dom.dispatchCustonEvent(document, "userPrefsSelected", this.dataset);
 	}
 
@@ -247,46 +249,46 @@ Prefs.prototype.clientSettings = function(){
 	
 	function navigation(event) {
 
-			switch (event.which) {
-			    case keys.KEY_OK:
-			    	focusHandler();
-			    	return;
-				case keys.KEY_LEFT: 
-					currentRow = 0;
-					if (currentColumn ==  0)
-						currentColumn = columnCount;
-					else
-						currentColumn--;
-					break;
-				case keys.KEY_UP: 
-				    if (currentRow < 1)
-				    {	
-					    homeFocus = true;
-					    currentRow = -1
-				    }
+		switch (event.which) {
+			case keys.KEY_OK:
+			   	focusHandler();
+			   	return;
+			case keys.KEY_LEFT: 
+				currentRow = 0;
+				if (currentColumn ==  0)
+					currentColumn = columnCount;
+				else
+					currentColumn--;
+				break;
+			case keys.KEY_UP: 
+			    if (currentRow < 1)
+			    {	
+				    homeFocus = true;
+				    currentRow = -1
+			    }
+			    else
+				    currentRow--;
+			    break;
+			case keys.KEY_RIGHT:
+				currentRow = 0;
+				if (currentColumn ==  columnCount)
+					currentColumn = 0;
+				else
+					currentColumn++;
+				break;
+			case keys.KEY_DOWN: 
+				if (currentColumn > 0)
+					if (currentRow == rowCount)
+					    currentRow = 0;
 				    else
-					    currentRow--;
-				    break;
-				case keys.KEY_RIGHT:
+					    currentRow++;
+				else
 					currentRow = 0;
-					if (currentColumn ==  columnCount)
-						currentColumn = 0;
-					else
-						currentColumn++;
-					break;
-				case keys.KEY_DOWN: 
-					if (currentColumn > 0)
-						if (currentRow == rowCount)
-						    currentRow = 0;
-					    else
-						    currentRow++;
-					else
-						currentRow = 0;
-					break;		
-				default:
-					return;
-			}
-		    highlight("#viewItem_"+currentColumn+"_"+currentRow)
+				break;		
+			default:
+				return;
+		}
+		highlight("#viewItem_"+currentColumn+"_"+currentRow)
 	}
 	function highlight(query){
 		settingsItemfocus = false;
@@ -298,6 +300,7 @@ Prefs.prototype.clientSettings = function(){
 		if (homeFocus)
 		{	
 			dom.querySelector(".home-link").focus()
+			currentHighlight = ".home-link"
 			homeFocus = false;
 			return;
 	    }

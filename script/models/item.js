@@ -17,7 +17,9 @@ Item.prototype.load = function(id, settings) {
 	dom.hide("#server");
 	dom.hide("#user");
 	dom.show("#homeLink");
-	dom.empty("#details");
+	
+	if (dom.exists("#item"))
+		dom.remove("#item")
 
 	emby.getUserItem({
 		id: id,
@@ -189,14 +191,18 @@ Item.prototype.load = function(id, settings) {
 		});
 		
 		dom.delegate("#item", "a.latest-item", "click", function(event) {
+			event.stopPropagation()
+			event.preventDefault()
 			dom.dispatchCustonEvent(document, "mediaItemSelected", event.delegateTarget.dataset);
 		});	
         focus(".latest-item");
-		dom.delegate("#item", "a.latest-item", "keydown", navigation);
+//		dom.delegate("#item", "a.latest-item", "keydown", navigation);
 	}
 
 	function navigation(event) {
 		event.preventDefault();
+		if (dom.exists("#player"))
+			return;
 		var self = event.delegateTarget;
 
 		if (event.which == keys.KEY_OK) {

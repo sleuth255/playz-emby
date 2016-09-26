@@ -23,36 +23,33 @@ Home.prototype.load = function() {
 	{
 	    prefs.clientSettingsClose();
 	}
-	if(dom.exists("#home"))
-		return;
+
 	dom.html("#view", {
 		nodeName: "div",
 		className: "home-view",
 		id: "home",
-/*		childNodes: [{
+		childNodes: [{
 			nodeName: "div",
-			className: "user-views",
-			id: "userViews",
-*/				childNodes: [{
-				nodeName: "div",
-				className: "user-views-column",
-				id: "userViews_0"
-			}]
-//		}]
+			className: "user-views-column",
+			id: "userViews_0"
+		}]
 	});
 
 	dom.on("body", "keydown", lostFocus);
 			
 	dom.delegate("#home", "a.latest-item", "click", function(event) {
+		event.preventDefault();
+		event.stopPropagation();
 		dom.dispatchCustonEvent(document, "mediaItemSelected", event.delegateTarget.dataset);
 	});	
 
 	dom.delegate("#home", "a.latest-items-more", "click", function(event) {
+		event.preventDefault();
+		event.stopPropagation();
 		dom.dispatchCustonEvent(document, "userViewMoreSelected", event.delegateTarget.dataset);
 	});	
 
 	dom.delegate("#home", "a", "keydown", navigation);
-					
 	emby.getUserItems({
 		limit: 2,
 		mediaTypes: 'video',
@@ -185,9 +182,13 @@ Home.prototype.load = function() {
 		
 // End Settings Logic	
 		dom.on(".user-views-item-settings", "click", function(event) {
+			event.stopPropagation()
+			event.preventDefault()
 			dom.dispatchCustonEvent(document, "userPrefsSelected", this.dataset);
 		});
 		dom.on(".user-views-item", "click", function(event) {
+			event.stopPropagation()
+			event.preventDefault()
 			dom.dispatchCustonEvent(document, "userViewSelected", this.dataset);
 		});		
 	}
@@ -236,7 +237,7 @@ Home.prototype.load = function() {
 			for (var i = 0; i < nodes.length; i++) {
 				nodes[i].id = "latestItemSet_" + i;
 			}
-			dom.dispatchCustonEvent(document, "allHomeItemsLoaded");
+//			dom.dispatchCustonEvent(document, "allHomeItemsLoaded");
 			
 			focus(".user-views-item");		
 		}		

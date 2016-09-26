@@ -63,14 +63,20 @@ CollectionSummary.prototype.load = function(data, settings) {
 	dom.on("body", "keydown", lostFocus);
 			
 	dom.on("#collection #all", "click", function() {
+		event.stopPropagation()
+		event.preventDefault()
 		dom.dispatchCustonEvent(document, "allCollectionSelected", this.dataset);
 	});
 			
 	dom.delegate("#collection", "a.latest-item", "click", function(event) {
+		event.stopPropagation()
+		event.preventDefault()
 		dom.dispatchCustonEvent(document, "mediaItemSelected", event.delegateTarget.dataset);
 	});	
 
 	dom.delegate("#collection", "a.latest-items-more", "click", function(event) {
+		event.stopPropagation()
+		event.preventDefault()
 		dom.dispatchCustonEvent(document, "userViewMoreSelected", event.delegateTarget.dataset);
 	});	
 
@@ -192,8 +198,6 @@ CollectionSummary.prototype.load = function(data, settings) {
 			for (var i = 0; i < nodes.length; i++) {
 				nodes[i].id = "latestItemSet_" + i;
 			}
-							
-			dom.dispatchCustonEvent(document, "collectionItemsLoaded");
 			focus("#userViews a:first-child");		
 		}		
 	}
@@ -208,7 +212,7 @@ CollectionSummary.prototype.load = function(data, settings) {
 
 	function navigation(event) {
 		event.preventDefault();
-		//event.stopPropagation();
+//		event.stopPropagation();
 		var self = event.delegateTarget;
 
 		if (event.which == keys.KEY_OK) {
@@ -216,11 +220,6 @@ CollectionSummary.prototype.load = function(data, settings) {
 			return;
 		}
 				
-		/*if (event.which == keys.KEY_BACK || event.which == keys.KEY_ESC) {
-			dom.dispatchCustonEvent(document, "collectionBack");	
-			return;
-		}*/
-	
 		if (dom.hasClass(self, "user-views-item")) {	
 			switch (event.which) {
 				case keys.KEY_LEFT: 

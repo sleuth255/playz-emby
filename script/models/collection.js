@@ -316,11 +316,15 @@ Collection.prototype.load = function(data, settings) {
 	this.scroll = dom.on("#view", "scroll", scrolling);
 			
 	dom.delegate("#collection", "a.latest-item", "click", function(event) {
+		event.stopPropagation()
+		event.preventDefault()
 		self.close();
 		dom.dispatchCustonEvent(document, "mediaItemSelected", event.delegateTarget.dataset);
 	});	
 
 	dom.delegate("#collection", "a.latest-items-more", "click", function(event) {
+		event.stopPropagation()
+		event.preventDefault()
 		self.close();
 		dom.dispatchCustonEvent(document, "userViewMoreSelected", event.delegateTarget.dataset);
 	});	
@@ -379,7 +383,7 @@ Collection.prototype.load = function(data, settings) {
 			menuWidth = dom.offset(node).left;						
 			columnWidth = dom.width(".latest-items-column-abs");
 			columnViewportCount = Math.floor(dom.width("body") / columnWidth);
-			dom.dispatchCustonEvent(document, "collectionAllItemsInitialised");	
+//			dom.dispatchCustonEvent(document, "collectionAllItemsInitialised");	
 		}
 		focus(".latest-item");
 	}
@@ -431,10 +435,6 @@ Collection.prototype.load = function(data, settings) {
 			return;
 		}
 				
-		/*if (event.which == keys.KEY_BACK || event.which == keys.KEY_ESC) {
-			dom.dispatchCustonEvent(document, "allCollectionBack", {id: data.id, name: data.name, collectionType: data.collectionType, imageTag: data.imageTag});
-		}*/
-	
 		if (dom.hasClass(self, "user-views-item")) {	
 			switch (event.which) {
 				case keys.KEY_LEFT: 
@@ -484,10 +484,6 @@ Collection.prototype.load = function(data, settings) {
 			return;
 		}
 				
-		/*if (event.which == keys.KEY_BACK || event.which == keys.KEY_ESC) {
-			dom.dispatchCustonEvent(document, "allCollectionBack", {id: data.id, name: data.name, collectionType: data.collectionType, imageTag: data.imageTag});
-		}*/
-	
 		var index = Number(this.id.substr(6));
 	
 		switch (event.which) {
