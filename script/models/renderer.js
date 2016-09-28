@@ -382,7 +382,7 @@ RENDERER.prototype.userItem = function(data, settings) {
 	var imageTag = item.ImageTags.Primary;
 	var imageType = "primary";
 	if (item.Type == "Episode")
-		var imageClass = "cover cover-series-large";
+		var imageClass = "cover cover-episode-large";
 	else
 	    var imageClass =  "cover cover-" + item.Type.toLowerCase() + "-large poster-" + item.Type.toLowerCase();
 	
@@ -406,6 +406,7 @@ RENDERER.prototype.userItem = function(data, settings) {
 					style: 
 					{
 						backgroundImage: "url(" + emby.getImageUrl({'itemId': imageId, tag: imageTag, imageType: imageType, height: 600, addPlayedIndicator: item.UserData.Played ? true : false}) + ")" 	
+
 					}
 				}]
 			});

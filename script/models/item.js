@@ -16,6 +16,7 @@ Item.prototype.load = function(id, settings) {
 	
 	dom.hide("#server");
 	dom.hide("#user");
+	dom.hide("#details")
 	dom.show("#homeLink");
 	
 	if (dom.exists("#item"))

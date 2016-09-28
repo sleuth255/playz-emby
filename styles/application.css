@@ -695,9 +695,14 @@ input:hover {
 	height: 195px;
 }
 
-.cover-thumb-large, .cover-episode-large {
+.cover-thumb-large {
 	height: 400px;
 	width: 600px;
+}
+
+.cover-episode-large {
+	height: 440px;
+	width: 700px;
 }
 
 .cover-photoalbum-large, .cover-musicalbum-large, .cover-photo-large, .cover-musicartist-large, .cover-audio-large, .cover-folder-large {
@@ -733,7 +738,7 @@ input:hover {
 	height: 351px;
 }
 
-.view-1080 .cover-thumb-large, .view-1080 .cover-episode-large {
+.view-1080 .cover-thumb-large, .view-1080 {
 	width: 1080px;
 	height: 720px;	
 }
@@ -792,14 +797,14 @@ input:hover {
 
 .item-content {
 	display: inline-block;
-	font-size: 26px;		
+	font-size: 26px;
 }
 
 #itemPoster {
 	display: inline-block;
 	vertical-align: top;
 	margin-right: 15px;	
-	overflow: hidden;		
+	overflow: hidden;
 }
 
 .item-details {

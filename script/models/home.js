@@ -18,12 +18,13 @@ Home.prototype.load = function() {
 
 	dom.show("#server");
 	dom.show("#user");
+	dom.show("#details")
 	dom.hide("#homeLink");
 	if (dom.exists("#screenplaySettings"))
 	{
 	    prefs.clientSettingsClose();
 	}
-
+	   
 	dom.html("#view", {
 		nodeName: "div",
 		className: "home-view",
@@ -50,17 +51,7 @@ Home.prototype.load = function() {
 	});	
 
 	dom.delegate("#home", "a", "keydown", navigation);
-	emby.getUserItems({
-		limit: 2,
-		mediaTypes: 'video',
-		recursive: true,
-		sortBy: 'dateplayed',
-		sortOrder: 'descending',
-		filters: 'isresumable',
-		success: displayUserResumeItems,
-		error: error				
-	});
-						
+
 	emby.getUserViews({
 		success: displayUserViews,
 		error: error			
@@ -83,6 +74,18 @@ Home.prototype.load = function() {
 		self.total += data.Items.length;
 		columnCount =  Math.ceil(data.Items.length / rowCount);
 			
+		emby.getUserItems({
+			enableImageTypes: "primary,thumb,backdrop",
+			includeItemTypes: "movie,episode",		
+			sortBy: 'dateplayed',
+			sortOrder: 'descending',
+			limit: 2,
+			parent: {collectionType: data.collectionType, name: data.name, imageTag: data.imageTag},	
+			filters: 'IsResumable',
+			success: displayUserResumeItems,
+			error: error				
+		});
+							
 		var idx = 0;
 		data.Items.forEach(function(item, index) {
 			var column = Math.floor(index/rowCount);
@@ -194,11 +197,29 @@ Home.prototype.load = function() {
 	}
 
 	function displayUserResumeItems(data) {
-		renderer.userResumeItems(data, {
-			container: "#home",
-			heading: "Continue Watching",
-			headerLink: "#server a"
-		});
+		if (data.Items.length > 0) 
+		{					
+			data.Items.forEach(function(item, index) {						
+				if (item.BackdropImageTags[0]) {
+					self.backdrops.push(item.Id + ":" + item.BackdropImageTags[0]);
+				}	
+			});
+	
+			if (self.backdrops.length > 0) {
+				var index = Math.floor((Math.random() * self.backdrops.length))
+				var backdrop = self.backdrops[index].split(":");
+				
+				dom.css("#poster", {
+					backgroundImage: "url(" + emby.getImageUrl({'itemId': backdrop[0], tag: backdrop[1], imageType: 'Backdrop', height: 1080}) + ")"
+				});
+			}
+			
+		    renderer.userResumeItems(data, {
+			    container: "#home",
+			    heading: "Continue Watching",
+			    headerLink: "#server a"
+		    });
+	    }
 	}
 		
 	function displayUserLatestItems(data) {	 
