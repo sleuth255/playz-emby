@@ -53,7 +53,8 @@ Server.prototype.open = function(url, add) {
 			messageType: message.error,			
 			text: "Server not found! Please check the server address is correct and try again."
 		});
-		dom.dispatchCustonEvent(document, "serverOpenFailed", data);
+		if (!dom.exists("#serverSettings"))
+		    dom.dispatchCustonEvent(document, "serverOpenFailed", data);
 	}			
 };
 
@@ -120,16 +121,17 @@ Server.prototype.add = function() {
 	});	
 
 	document.getElementById("serverUrl").focus();
-	dom.on("#keyForm", "submit", enterPress, false);
+//	dom.on("#keyForm", "submit", enterPress, false);
 	dom.on("#serverUrl", "blur", function(event) {
 		document.getElementById("serverUrl").focus();
 	});
 	dom.on("#serverUrl", "keydown", function(event) {
+		event.preventDefault();
+		event.stopPropagation();
 		switch(event.which) {
 		case keys.KEY_OK:
             enterPress(event);
 			break;
-			
 		case keys.KEY_SPACE:
             spacePress(event);
 			break;	
@@ -141,7 +143,6 @@ Server.prototype.add = function() {
 		default:				
 			keyPress(event.key);
 			break;
-			
       }
 		
 	});

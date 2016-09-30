@@ -230,8 +230,9 @@ Player.prototype.load = function(data, settings) {
 	}
 };
 
-Player.prototype.close = function() {
-	time = Math.floor(event.target.currentTime);	
+Player.prototype.close = function(event) {
+	var video = document.getElementById("video");		
+	time = Math.floor(video.currentTime);	
 	var ticks = time * 10000000;
 
 	emby.postSessionPlayingStopped({
@@ -242,6 +243,11 @@ Player.prototype.close = function() {
 			CanSeek: true,
 			PositionTicks: ticks,
 			PlayMethod: "DirectStream"
+		}
+	});	
+	emby.postActiveEncodingStop({
+		data: {
+			DeviceId: device.id
 		}
 	});	
 	dom.remove("#player");	

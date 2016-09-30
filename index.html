@@ -40,6 +40,10 @@
 									
 			dom.addClass("body", device.bodyClass);
 			
+			dom.on(document, "serverOpenFailed", function(event) {
+				server.add(); 
+			});
+			
 			dom.on(document, "serverOpened", function(event) {
 				user.load(event.detail); 
 			});

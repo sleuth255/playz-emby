@@ -391,9 +391,19 @@ EMBY.prototype.postSessionPlayingStopped = function(settings) {
 		headers: this.headers(), 
 		data: settings.data
 	});			
+
 };
 
+EMBY.prototype.postActiveEncodingStop = function(settings) {
+	ajax.request(this.settings.ServerUrl + "/Videos/ActiveEncodings" , {
+		method: "DELETE",
+		headers: this.headers(), 
+		data: settings.data
+	});			
+};	
+
 EMBY.prototype.socketOpen = function(settings) {
+
 	var server = "ws" + this.settings.ServerUrl.substr(4); 	
 	var apiKey = this.settings.AccessToken;
 	this.socket = new WebSocket(server + "?api_key=" + apiKey + "&deviceId=" + device.id);	
