@@ -38,19 +38,16 @@ AJAX.prototype.request = function(url, settings) {
 	}
 	
 	xhr.onreadystatechange = function () {
-		if (xhr.readyState == 4) {
-			if (xhr.status == 200) {
-				if (settings.success) {
-					settings.success(JSON.parse(xhr.responseText));
-				}
-			} else {
-				if (settings.error) {
-					if (xhr.response) {
-						settings.error(JSON.parse(xhr.response));
-					}
-				}
-			}
-		}
+		if (xhr.readyState == 4) 
+			if (xhr.status == 200) 
+				settings.success(JSON.parse(xhr.responseText));
+			else 
+			if (xhr.status == 204)
+				settings.success({success: true})
+			else	
+			if (settings.error) 
+				if (xhr.response) 
+					settings.error(JSON.parse(xhr.response));
 	}
 	
 	if (settings.data) {

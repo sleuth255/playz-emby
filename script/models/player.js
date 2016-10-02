@@ -4,7 +4,7 @@
 // --------------------------------------------
 
 function Player() {
-
+	this.interval;
 };
 
 Player.prototype.load = function(data, settings) {
@@ -13,6 +13,7 @@ Player.prototype.load = function(data, settings) {
 	var item = data;
 	var time = 0;
 	var videoStarting = true;
+
 	
 	if (item.VideoType && item.VideoType == "VideoFile") {				
 		dom.append("body", {
@@ -127,7 +128,7 @@ Player.prototype.load = function(data, settings) {
 		});
 	
 		video.addEventListener("timeupdate", function(event) {
-		    // update the time/duration and slider values
+			// update the time/duration and slider values
 			var durhr = Math.floor(video.duration / 3600);
 		    var durmin = Math.floor((video.duration % 3600) / 60);
 			durmin = durmin < 10 ? '0' + durmin : durmin;
@@ -157,7 +158,6 @@ Player.prototype.load = function(data, settings) {
 
 			}
 		});
-
 		video.onpause = function(event) {
 			time = Math.floor(event.target.currentTime);	
 			var ticks = time * 10000000;
@@ -173,7 +173,7 @@ Player.prototype.load = function(data, settings) {
 					IsPaused: true
 				}
 			});
-							
+						
 			console.log("Play Paused - " + time + " : " + ticks);
 		};
 		
@@ -231,11 +231,13 @@ Player.prototype.load = function(data, settings) {
 };
 
 Player.prototype.close = function(event) {
+//	clearInterval(this.interval)
 	var video = document.getElementById("video");		
 	time = Math.floor(video.currentTime);	
 	var ticks = time * 10000000;
 
 	emby.postSessionPlayingStopped({
+		success: function(){emby.postActiveEncodingStop()},
 		data: {
 			ItemId: item.Id,
 			MediaSourceId: item.Id,
@@ -245,13 +247,11 @@ Player.prototype.close = function(event) {
 			PlayMethod: "DirectStream"
 		}
 	});	
-	emby.postActiveEncodingStop({
-		data: {
-			DeviceId: device.id
-		}
-	});	
-	dom.remove("#player");	
+	
+ 
+    dom.remove("#player");	
 	dom.remove("#video-controls");
+   	
 };
 
 Player.prototype.skip = function() {

@@ -167,7 +167,7 @@ Prefs.prototype.clientSettings = function(){
 	    td = tr.insertCell(-1);
 	    td.innerHTML = '<input style="font-size:30px; color: #fff; text-align:right; padding:0px 10px 0px 0px" id ="viewItem_1_2" class="settings-video-bitrate" size="4" type="text" name="videorate" value="'+ self.videoBitrate + '"/>';
 	    td = tr.insertCell(-1);
-        td.innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
+        td.innerHTML = '(zero disables transcoding)&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
 	    tr = tbl.insertRow(-1);
 	    td = tr.insertCell(-1);
 	    td.appendChild(document.createTextNode('Audio BitRate:'));

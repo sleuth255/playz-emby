@@ -286,8 +286,11 @@ EMBY.prototype.getVideoHlsStreamUrl = function(settings) {
 		t = "#t=" + startTimeSecs
 	}
 
+	var direct = false;
 	var audioStreamIndex = settings.audioStreamIndex || 1;
-	var videoBitrate = Math.floor(prefs.videoBitrate) || 10000000;
+	var videoBitrate = Math.floor(prefs.videoBitrate) ;
+	if (videoBitrate == 0)
+		direct = true;
 	var audioBitrate = Math.floor(prefs.audioBitrate) || 128000;
 	var maxAudioChannels = settings.maxAudioChannels || 5;
 	var maxHeight = settings.maxHeight || 720;
@@ -306,7 +309,7 @@ EMBY.prototype.getVideoHlsStreamUrl = function(settings) {
 	"&audioBitrate=" + audioBitrate + "&maxAudioChannels=" + maxAudioChannels + "&maxHeight=" + maxHeight + "&level=" + level +
 	"&clientTime=" + clientTime + "&profile=" + profile + "&playSessionId=" + playSessionId + "&api_key=" + this.settings.AccessToken + t;
 */	
-	return this.settings.ServerUrl + "/videos/" + itemId + "/master.m3u8?deviceId=" + deviceId + "&mediaSourceId=" + itemId +
+	return this.settings.ServerUrl + "/videos/" + itemId + "/master.m3u8?static =" + direct + "&deviceId=" + deviceId + "&mediaSourceId=" + itemId +
 	"&videoCodec=" + videoCodec + "&audioCodec=" + audioCodec + "&audioStreamIndex=" + audioStreamIndex + "&videoBitrate=" + videoBitrate + 
 	"&audioBitrate=" + audioBitrate + "&maxAudioChannels=" + maxAudioChannels + "&maxHeight=" + maxHeight + "&level=" + level +
 	"&clientTime=" + clientTime + "&profile=" + profile + "&api_key=" + this.settings.AccessToken + t;
@@ -389,16 +392,19 @@ EMBY.prototype.postSessionPlayingStopped = function(settings) {
 	ajax.request(this.settings.ServerUrl + "/sessions/playing/stopped" , {
 		method: "POST",
 		headers: this.headers(), 
-		data: settings.data
+		data: settings.data,
+		success: function(data) {
+			settings.success(data);
+		},
+		error: settings.error
 	});			
 
 };
 
 EMBY.prototype.postActiveEncodingStop = function(settings) {
-	ajax.request(this.settings.ServerUrl + "/Videos/ActiveEncodings" , {
+	ajax.request(this.settings.ServerUrl + "/Videos/ActiveEncodings?DeviceId=" + device.id , {
 		method: "DELETE",
-		headers: this.headers(), 
-		data: settings.data
+		headers: this.headers() 
 	});			
 };	
 
