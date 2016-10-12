@@ -4,7 +4,6 @@
 // --------------------------------------------
 
 function Player() {
-	this.interval;
 };
 
 Player.prototype.load = function(data, settings) {

@@ -154,6 +154,10 @@
 			});
 
 			dom.on("#logo", "click", function(event) {			
+				storage.remove("emby.settings.current.server");
+				storage.remove("emby.settings.current.user");
+				storage.remove("emby.settings.servers");	
+				storage.remove("emby.settings.prefs");	
 				location.reload(true);
 			});
 
@@ -165,32 +169,76 @@
 				user.login();
 			});
 			
-			document.addEventListener("keydown", function(event) 
+			document.addEventListener("keyup", function(event) 
 			{
-			    if (dom.exists("#screenplaySettings"))
+				if (dom.exists("#screenplaySettings"))
 					return;
 
-/*				if (event.which == keys.KEY_RED) {
+				if ((event.which == keys.KEY_RED && Math.floor(prefs.redButton) == 1)
+			    || (event.which == keys.KEY_GREEN && Math.floor(prefs.greenButton) == 1)
+			    || (event.which == keys.KEY_YELLOW && Math.floor(prefs.yellowButton) == 1)
+			    || (event.which == keys.KEY_BLUE && Math.floor(prefs.blueButton) == 1))
+			    {
 					storage.remove("emby.settings.current.server");
 					storage.remove("emby.settings.current.user");
 					storage.remove("emby.settings.servers");	
 					storage.remove("emby.settings.prefs");	
 					location.reload(true);
-				}*/
+				}
 
 				if (dom.exists("#player")) {
 					switch (event.which) {
+			           case keys.KEY_RED:
+			        	   if (Math.floor(prefs.redButton) == 2)
+			        	       if (controlsVisible)
+			        	       {
+			        	          player.hideControls();
+			        	          controlsVisible = false;
+			        	       }
+			        	       else
+			        	       {
+			        	 	      player.showControls({persist: true});
+			        	 	      controlsVisible = true;
+			        	       }
+				           return;
 				        case keys.KEY_GREEN:
-				        	if (controlsVisible)
-				        	{
-				        	   player.hideControls();
-				        	   controlsVisible = false;
-				        	}
-				        	else
-				        	{
-				        		player.showControls({persist: true});
-				        		controlsVisible = true;
-				        	}
+				        	if (Math.floor(prefs.greenButton) == 2)
+				        	    if (controlsVisible)
+				        	    {
+				        	       player.hideControls();
+				        	       controlsVisible = false;
+				        	    }
+				        	    else
+				        	    {
+				        	 	   player.showControls({persist: true});
+				        	 	   controlsVisible = true;
+				        	    }
+					        return;
+				        case keys.KEY_YELLOW:
+				        	if (Math.floor(prefs.yellowButton) == 2)
+				        	    if (controlsVisible)
+				        	    {
+				        	       player.hideControls();
+				        	       controlsVisible = false;
+				        	    }
+				        	    else
+				        	    {
+				        	 	   player.showControls({persist: true});
+				        	 	   controlsVisible = true;
+				        	    }
+					        return;
+				        case keys.KEY_BLUE:
+				        	if (Math.floor(prefs.blueButton) == 2)
+				        	    if (controlsVisible)
+				        	    {
+				        	       player.hideControls();
+				        	       controlsVisible = false;
+				        	    }
+				        	    else
+				        	    {
+				        	 	   player.showControls({persist: true});
+				        	 	   controlsVisible = true;
+				        	    }
 					        return;
 					    case keys.KEY_RIGHT:
 						    player.skip();
@@ -251,7 +299,7 @@
 		</div>
 		<div id="server"></div>
 		<div id="user"></div>
-		<div id="homeLink" style="display: none;"><a href="#" class="home-link"><span class="glyphicon home"></span></a></div>
+ 	<div id="homeLink" style="display: none;"><a href="#" class="home-link"><span class="glyphicon home"></span></a></div> 
 	</div>
 	<div id="view"></div>
 	<div id="details"></div>

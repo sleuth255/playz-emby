@@ -220,10 +220,28 @@ a {
 	background: #000 url("../images/screenplay-logo-full-stacked.png") no-repeat center center;
 }
 
-#screenplaySettings {
-	position: relative;
+.screenplayCol1 {
+	position: absolute;
 	top: +200px;
 	left: +500px;
+	font-size: 30px;
+	border-spacing: 10px;
+	color: #fff;
+}
+
+.screenplayCol2 {
+	position: absolute;
+	top: +200px;
+	left: +1000px;
+	font-size: 30px;
+	border-spacing: 10px;
+	color: #fff;
+}
+
+.screenplayUpdateButton {
+	position: absolute;
+	top: +610px;
+	left: +800px;
 	font-size: 30px;
 	border-spacing: 10px;
 	color: #fff;
@@ -405,7 +423,7 @@ input:hover {
 .playerpopup {
 	position: absolute;
 	right: 200px;
-	top: 200px;
+	top: 100px;
 	display: block;
 	font-size: 40px;
 	color: #fff;
@@ -962,6 +980,24 @@ button:hover {
 	outline: none;
 	border: 2px solid rgba(82, 181, 75, 1);	
 	box-shadow: 0 0 20px rgba(82, 181, 75, 0.8);		
+}
+.viewItem_Selected {
+	outline: none;
+	border: 2px solid rgba(82, 181, 75, 1);	
+	background-color: #00f;
+	color: #fff;
+	box-shadow: 0 0 20px rgba(82, 181, 75, 0.8);		
+}
+.viewItem_Selected::selection{
+	background: #00f;
+}
+.viewItem_Selected::-moz-selection{
+	background: #00f;
+}
+.viewItem{
+	outline: none;
+	color: #fff;
+	background-color: #000;
 }
 
 

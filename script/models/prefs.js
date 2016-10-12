@@ -13,27 +13,49 @@ function Prefs() {
 	this.doViewItem_1_1_click;	
 	this.doViewItem_1_2_click;	
 	this.doViewItem_1_3_click;	
+	this.doViewItem_2_0_click;	
+	this.doViewItem_2_1_click;	
+	this.doViewItem_2_2_click;	
+	this.doViewItem_2_3_click;	
 	this.settings = "emby.settings.prefs";
 	this.backSkip = 30;
 	this.fwdSkip = 60;
-	this.showSubTitles = false;
-	this.videoBitrate = 10000000;
+	this.redButton = 1;
+	this.greenButton = 2;
+	this.yellowButton = 0;
+	this.blueButton = 0;
+	this.videoBitrate = 100000000;
 	this.audioBitrate = 128000;
 	this.resumeTicks = 0;
 	this.durationTicks = 0;
+	this.prefsVersion = 2;
 };
 
 
 Prefs.prototype.load = function() {
+	var self = this;
 	var prefs = new Array;
 	if (storage.exists(this.settings)) 
 	{
 		prefs = (storage.get(this.settings));
-		this.backSkip = prefs[0];
-		this.fwdSkip = prefs[1];
-		this.showSubTitles = prefs[2];
-		this.videoBitrate = prefs[3];
-		this.audioBitrate = prefs[4];
+		this.fwdSkip = prefs[0];
+		this.backSkip = prefs[1];
+		this.videoBitrate = prefs[2];
+		this.audioBitrate = prefs[3];
+		this.redButton = prefs[4];
+		this.greenButton = prefs[5];
+		this.yellowButton = prefs[6];
+		this.blueButton = prefs[7];
+		this.prefsVersion = prefs[8];
+		if (this.prefsVersion != 2)
+		{
+			playerpopup.show({
+				duration: 4000,
+				text: "Settings reset due to database update: Please check your settings."
+			});	
+			self.reset()
+			self.save()
+		}	
 	} 
 };
 
@@ -41,7 +63,7 @@ Prefs.prototype.save = function(){
 	var self = this;
 	var prefs = new Array;
 	
-	prefs.push(this.backSkip,this.fwdSkip, this.showSubTitles, this.videoBitrate, this.audioBitrate);
+	prefs.push(this.fwdSkip,this.backSkip, this.videoBitrate, this.audioBitrate, this.redButton, this.greenButton, this.yellowButton, this.blueButton, this.prefsVersion);
 	storage.set(self.settings,prefs);
 };
 
@@ -49,9 +71,13 @@ Prefs.prototype.reset = function(){
 	storage.remove(this.settings);
 	this.backSkip = 30;
 	this.fwdSkip = 60;
-	this.showSubTitles = false;
-	this.videoBitrate = 10000000;
+	this.videoBitrate = 100000000;
 	this.audioBitrate = 128000;
+	this.redButton = 1;
+	this.greenButton = 2;
+	this.yellowButton = 0;
+	this.blueButton = 0;
+	this.prefsVersion = 2;
 }
 
 Prefs.prototype.clientSettingsClose = function(){
@@ -62,6 +88,10 @@ Prefs.prototype.clientSettingsClose = function(){
 	dom.off("#viewItem_1_1", "click", this.doViewItem_1_1_click);
 	dom.off("#viewItem_1_2", "click", this.doViewItem_1_2_click);
 	dom.off("#viewItem_1_3", "click", this.doViewItem_1_3_click);
+	dom.off("#viewItem_2_0", "click", this.doViewItem_2_0_click);
+	dom.off("#viewItem_2_1", "click", this.doViewItem_2_1_click);
+	dom.off("#viewItem_2_2", "click", this.doViewItem_2_2_click);
+	dom.off("#viewItem_2_3", "click", this.doViewItem_2_3_click);
 	dom.remove("#screenplaySettings")
 }
 Prefs.prototype.clientSettings = function(){
@@ -74,6 +104,7 @@ Prefs.prototype.clientSettings = function(){
 	dom.hide("#server");
 	dom.hide("#user");
 	dom.show("#homeLink");
+	dom.remove("#screenplaySettings");
 
 	this.navigation = dom.on("body","keydown",navigation)
 
@@ -90,15 +121,17 @@ Prefs.prototype.clientSettings = function(){
 
 	
 	var limit = 5;
-	var rowCount = 4;
-	var columnCount = 1;		
+	var rowCount = 3;
+	var columnCount = 2;		
 	var currentColumn = 0;
 	var currentRow = 0;
 	var column = 0;
 	var row = 0;
 	var currentHighlight = "";
 	var settingsItemfocus = false;
+	var listboxItemfocus = false
 	var homeFocus = false;
+	var updateFocus = false;
 	dom.append("#userViews", {
 		nodeName: "div",
 		className: "user-views-column",
@@ -117,14 +150,27 @@ Prefs.prototype.clientSettings = function(){
 		}]
 	});		
 
-	dom.remove("#screenplaySettings");
 	dom.append("body", {
 		nodeName: "div",
-		className: "key-form-settings",
-		id: "screenplaySettings"
-		});
-		
-	    var body = document.getElementById("screenplaySettings");
+		id: "screenplaySettings",
+		childNodes: [{
+			nodeName: "div",
+			className: "screenplayCol1",
+			id: "screenplaySettings1"
+		}, {
+			nodeName: "div",
+			className: "screenplayCol2",
+			id: "screenplaySettings2"
+		}, {
+			nodeName: "div",
+			className: "screenplayUpdateButton",
+			id: "screenplaySettings3"
+		}]		
+	});
+
+	    // Create Column 1 Settings
+	
+		var body = document.getElementById("screenplaySettings1");
 	    var tbl  = document.createElement('table');
 	    tbl.style.borderSpacing = '10px';
 	    var caption = tbl.createCaption();
@@ -136,14 +182,14 @@ Prefs.prototype.clientSettings = function(){
 	    td = tr.insertCell(-1);
 	    td.appendChild(document.createTextNode('Forward Skip:'));
 	    td = tr.insertCell(-1);
-	    td.innerHTML = '<input style="font-size:30px; color: #fff; text-align:right; padding:0px 10px 0px 0px" id ="viewItem_1_0" class="settings-forward-skip" size="2" type="text" name="fwdskip" value="'+ self.fwdSkip + '"/>';
+	    td.innerHTML = '<input style="font-size:30px; text-align:right; padding:0px 10px 0px 0px" id ="viewItem_1_0" class="viewItem"  size="2" type="text" name="fwdskip" value="'+ self.fwdSkip + '"/>';
 	    td = tr.insertCell(-1);
 	    td.innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
 	    tr = tbl.insertRow(-1);
 	    td = tr.insertCell(-1);
 	    td.appendChild(document.createTextNode('Back Skip:'));
 	    td = tr.insertCell(-1);
-	    td.innerHTML = '<input style="font-size:30px; color: #fff; text-align:right; padding:0px 10px 0px 0px" id ="viewItem_1_1" class="settings-back-skip" size="2" type="text" name="backskip" value="'+ self.backSkip + '"/>';
+	    td.innerHTML = '<input style="font-size:30px; text-align:right; padding:0px 10px 0px 0px" id ="viewItem_1_1" class="viewItem" size="2" type="text" name="backskip" value="'+ self.backSkip + '"/>';
 	    td = tr.insertCell(-1);
 	    td.innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
 	    body.appendChild(tbl);
@@ -165,14 +211,14 @@ Prefs.prototype.clientSettings = function(){
 	    td = tr.insertCell(-1);
 	    td.appendChild(document.createTextNode('Video BitRate:'));
 	    td = tr.insertCell(-1);
-	    td.innerHTML = '<input style="font-size:30px; color: #fff; text-align:right; padding:0px 10px 0px 0px" id ="viewItem_1_2" class="settings-video-bitrate" size="4" type="text" name="videorate" value="'+ self.videoBitrate + '"/>';
+	    td.innerHTML = '<input style="font-size:30px; text-align:right; padding:0px 10px 0px 0px" id ="viewItem_1_2" class="viewItem" size="5" type="text" name="videorate" value="'+ self.videoBitrate + '"/>';
 	    td = tr.insertCell(-1);
-        td.innerHTML = '(zero disables transcoding)&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
+	    td.innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
 	    tr = tbl.insertRow(-1);
 	    td = tr.insertCell(-1);
 	    td.appendChild(document.createTextNode('Audio BitRate:'));
 	    td = tr.insertCell(-1);
-	    td.innerHTML = '<input style="font-size:30px; color: #fff; text-align:right; padding:0px 10px 0px 0px" id ="viewItem_1_3" class="settings-audio-bitrate" size="4" type="text" name="audiorate" value="'+ self.audioBitrate + '"/>';
+	    td.innerHTML = '<input style="font-size:30px; text-align:right; padding:0px 10px 0px 0px" id ="viewItem_1_3" class="viewItem" size="4" type="text" name="audiorate" value="'+ self.audioBitrate + '"/>';
 	    td = tr.insertCell(-1);
         td.innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
 	    body.appendChild(tbl);
@@ -183,6 +229,8 @@ Prefs.prototype.clientSettings = function(){
 	    td.innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
 	    body.appendChild(tbl);
 
+		body = document.getElementById("screenplaySettings3");
+	    tbl  = document.createElement('table');
 	    tbl  = document.createElement('table');
 	    tbl.style.borderSpacing = '0px';
 	    tbl.style.padding = '25px';
@@ -191,12 +239,61 @@ Prefs.prototype.clientSettings = function(){
 	    td.innerHTML = '<button id ="viewItem_1_4" class="settings-submit">Update</button>';
 	    body.appendChild(tbl);
 	    
-		this.settingsSubmit = dom.on(".settings-submit", "click", settingsSubmit);
+	    // Create Column 2 Settings
+		
+		body = document.getElementById("screenplaySettings2");
+	    tbl  = document.createElement('table');
+	    tbl.style.borderSpacing = '10px';
+	    caption = tbl.createCaption();
+	    caption.style.fontSize = '40px';
+	    caption.style.textAlign = 'left';
+	    caption.innerHTML = "<b>Remote Control Settings</b>";
+	    tr = tbl.insertRow(-1);
+	    td = tr.insertCell(-1);
+	    td.appendChild(document.createTextNode('Red Button:'));
+	    td = tr.insertCell(-1);
+	    td.innerHTML = '<select style="font-size:30px; text-align:right; padding:0px 10px 0px 0px" class="viewItem" id="viewItem_2_0" name="redButton"><option>Not Used</option><option>Reset screenplay</option><option>Toggle Controls</option><option>Toggle Subtitles</option></select>';
+	    td = tr.insertCell(-1);
+	    td.innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
+	    tr = tbl.insertRow(-1);
+	    td = tr.insertCell(-1);
+	    td.appendChild(document.createTextNode('Green Button:'));
+	    td = tr.insertCell(-1);
+	    td.innerHTML = '<select style="font-size:30px; text-align:right; padding:0px 10px 0px 0px" class="viewItem" id ="viewItem_2_1" name="greenButton"><option>Not Used</option><option>Reset screenplay</option><option>Toggle Controls</option><option>Toggle Subtitles</option></select>';
+	    td = tr.insertCell(-1);
+	    td.innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
+	    tr = tbl.insertRow(-1);
+	    td = tr.insertCell(-1);
+	    td.appendChild(document.createTextNode('Yellow Button:'));
+	    td = tr.insertCell(-1);
+	    td.innerHTML = '<select style="font-size:30px; text-align:right; padding:0px 10px 0px 0px" class="viewItem" id ="viewItem_2_2" name="yellowButton"><option>Not Used</option><option>Reset screenplay</option><option>Toggle Controls</option><option>Toggle Subtitles</option></select>';
+	    td = tr.insertCell(-1);
+	    td.innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
+	    tr = tbl.insertRow(-1);
+	    td = tr.insertCell(-1);
+	    td.appendChild(document.createTextNode('Blue Button:'));
+	    td = tr.insertCell(-1);
+	    td.innerHTML = '<select style="font-size:30px; text-align:right; padding:0px 10px 0px 0px" class="viewItem" id ="viewItem_2_3" name="blueButton"><option>Not Used</option><option>Reset screenplay</option><option>Toggle Controls</option><option>Toggle Subtitles</option></select>';
+	    td = tr.insertCell(-1);
+	    td.innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
+	    body.appendChild(tbl);
+	    
+    
+	    dom.querySelector("#viewItem_2_0").selectedIndex = this.redButton;
+	    dom.querySelector("#viewItem_2_1").selectedIndex = this.greenButton
+	    dom.querySelector("#viewItem_2_2").selectedIndex = this.yellowButton
+	    dom.querySelector("#viewItem_2_3").selectedIndex = this.blueButton
+	    
+	    this.settingsSubmit = dom.on(".settings-submit", "click", settingsSubmit);
 		this.userViewsItemSettings = dom.on(".user-views-item-settings", "click", userViewsItemSettings)
 		this.doViewItem_1_0_click = dom.on("#viewItem_1_0", "click", doViewItem_1_0_click)
 		this.doViewItem_1_1_click = dom.on("#viewItem_1_1", "click", doViewItem_1_1_click)
 		this.doViewItem_1_2_click = dom.on("#viewItem_1_2", "click", doViewItem_1_2_click)
 		this.doViewItem_1_3_click = dom.on("#viewItem_1_3", "click", doViewItem_1_3_click)
+		this.doViewItem_2_0_click = dom.on("#viewItem_2_0", "click", doViewItem_2_0_click)
+		this.doViewItem_2_1_click = dom.on("#viewItem_2_1", "click", doViewItem_2_1_click)
+		this.doViewItem_2_2_click = dom.on("#viewItem_2_2", "click", doViewItem_2_2_click)
+		this.doViewItem_2_3_click = dom.on("#viewItem_2_3", "click", doViewItem_2_3_click)
 		dom.focus("#viewItem_0_0");
 
 	function userViewsItemSettings (event){
@@ -210,6 +307,10 @@ Prefs.prototype.clientSettings = function(){
 		self.backSkip = dom.querySelector("#viewItem_1_1").value;
 		self.videoBitrate = dom.querySelector("#viewItem_1_2").value;
 		self.audioBitrate = dom.querySelector("#viewItem_1_3").value;
+		self.redButton = dom.querySelector("#viewItem_2_0").selectedIndex;
+		self.greenButton = dom.querySelector("#viewItem_2_1").selectedIndex;
+		self.yellowButton = dom.querySelector("#viewItem_2_2").selectedIndex;
+		self.blueButton = dom.querySelector("#viewItem_2_3").selectedIndex;
 		playerpopup.show({
 			duration: 1000,
 			text: "Settings changed"
@@ -247,14 +348,52 @@ Prefs.prototype.clientSettings = function(){
 		settingsItemfocus = true;
 	}
 	
-	function navigation(event) {
+	function doViewItem_2_0_click (event){
+		currentColumn = 2
+		currentRow = 0
+		highlight("#viewItem_2_0")
+		settingsItemfocus = true;
+	}
+	
+	function doViewItem_2_1_click (event){
+		currentColumn = 2
+		currentRow = 1
+		highlight("#viewItem_2_1")
+		settingsItemfocus = true;
+	}
+	
+	function doViewItem_2_2_click (event){
+		currentColumn = 2
+		currentRow = 2
+		highlight("#viewItem_2_2")
+		settingsItemfocus = true;
+	}
+	
+	function doViewItem_2_3_click (event){
+		currentColumn = 2
+		currentRow = 3
+		highlight("#viewItem_2_3")
+		settingsItemfocus = true;
+	}
+	
+function navigation(event) {
+		
+	    if (event.which == keys.KEY_OK)
+	    {
+	    	if (currentHighlight == ".home-link")
+	    	{	
+	            event.stopPropagation()
+                event.preventDefault()
+	    	}
+	        focusHandler();
+	        return
+	    }    
+	    if (listboxItemfocus)
+	    	return
 
-		switch (event.which) {
-			case keys.KEY_OK:
-			   	focusHandler();
-			   	return;
+	    switch (event.which) {
 			case keys.KEY_LEFT: 
-				currentRow = 0;
+			    currentRow = 0;
 				if (currentColumn ==  0)
 					currentColumn = columnCount;
 				else
@@ -278,8 +417,11 @@ Prefs.prototype.clientSettings = function(){
 				break;
 			case keys.KEY_DOWN: 
 				if (currentColumn > 0)
-					if (currentRow == rowCount)
-					    currentRow = 0;
+					if (currentRow >= rowCount)
+					{	
+					    updateFocus = true;
+					    currentRow = rowCount +1;
+					}
 				    else
 					    currentRow++;
 				else
@@ -293,7 +435,7 @@ Prefs.prototype.clientSettings = function(){
 	function highlight(query){
 		settingsItemfocus = false;
 		for(var col = 0;col <= columnCount; col++)
-			for (var row = 0; row <= rowCount; row++)
+			for (var row = 0; row <= rowCount+1; row++)
 				if (dom.hasClass("#viewItem_"+ col + "_" +row, "viewItem_highlight"))
 					dom.removeClass("#viewItem_"+ col + "_" +row, "viewItem_highlight");
 
@@ -304,6 +446,14 @@ Prefs.prototype.clientSettings = function(){
 			homeFocus = false;
 			return;
 	    }
+		if (updateFocus)
+		{
+			dom.querySelector("#viewItem_1_4").focus()
+			currentHighlight = "#viewItem_1_4"
+			dom.addClass("#viewItem_1_4","viewItem_highlight");
+			updateFocus = false;
+			return;
+		}
 
 		if (query == "#viewItem_0_0")
 			dom.querySelector("#viewItem_0_0").focus();
@@ -320,24 +470,50 @@ Prefs.prototype.clientSettings = function(){
 	}
 
 	function focusHandler(){
-
-		if (currentHighlight == "#viewItem_1_4" || currentHighlight == "#viewItem_0_0")
+		if (currentHighlight == "#viewItem_1_4" || currentHighlight == "#viewItem_0_0" || currentHighlight == ".home-link")
 		{
 			dom.querySelector(currentHighlight).click();
 			return;
 		}
-		if (!settingsItemfocus)
+		if (currentColumn == 1)
 		{
-			settingsItemfocus = true;
-			dom.querySelector(currentHighlight).select();
-			dom.querySelector(currentHighlight).focus();
+ 		    if (!settingsItemfocus)
+		    {
+			    settingsItemfocus = true;
+			    dom.querySelector(currentHighlight).select();
+			    dom.querySelector(currentHighlight).focus();
+				dom.removeClass(currentHighlight,"viewItem");
+				dom.addClass(currentHighlight,"viewItem_Selected");
+		    }
+		    else
+		    {
+			    settingsItemfocus = false;
+				dom.removeClass(currentHighlight,"viewItem_Selected");
+				dom.addClass(currentHighlight,"viewItem");
+			    dom.querySelector(currentHighlight).blur();
+		    }
+ 		    return
 		}
-		else
+		if (currentColumn == 2)
 		{
-			settingsItemfocus = false;
-			dom.querySelector(currentHighlight).blur();
+			if (!settingsItemfocus)
+			{
+				settingsItemfocus = true;
+				listboxItemfocus = true;
+				dom.removeClass(currentHighlight,"viewItem");
+				dom.addClass(currentHighlight,"viewItem_Selected");
+				dom.querySelector(currentHighlight).focus();
+			}
+			else
+			{
+				settingsItemfocus = false;
+				listboxItemfocus = false;
+				dom.removeClass(currentHighlight,"viewItem_Selected");
+				dom.addClass(currentHighlight,"viewItem");
+				dom.querySelector(currentHighlight).blur();
+			}
+			return
 		}
-		
 	}
 	
 };
