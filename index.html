@@ -278,10 +278,10 @@
 				}
 			});	
 								
-			prefs.load();
 			splash.show({
 				duration: 3000,
 				end: function() {
+					prefs.load();
 					server.load();	
 				}
 			});

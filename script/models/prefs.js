@@ -252,28 +252,28 @@ Prefs.prototype.clientSettings = function(){
 	    td = tr.insertCell(-1);
 	    td.appendChild(document.createTextNode('Red Button:'));
 	    td = tr.insertCell(-1);
-	    td.innerHTML = '<select style="font-size:30px; text-align:right; padding:0px 10px 0px 0px" class="viewItem" id="viewItem_2_0" name="redButton"><option>Not Used</option><option>Reset screenplay</option><option>Toggle Controls</option><option>Toggle Subtitles</option></select>';
+	    td.innerHTML = '<select style="font-size:30px; text-align:right; padding:0px 10px 0px 0px" class="viewItem" id="viewItem_2_0" name="redButton"><option>Not Used</option><option>Reset screenplay</option><option>Toggle Controls</option></select>';
 	    td = tr.insertCell(-1);
 	    td.innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
 	    tr = tbl.insertRow(-1);
 	    td = tr.insertCell(-1);
 	    td.appendChild(document.createTextNode('Green Button:'));
 	    td = tr.insertCell(-1);
-	    td.innerHTML = '<select style="font-size:30px; text-align:right; padding:0px 10px 0px 0px" class="viewItem" id ="viewItem_2_1" name="greenButton"><option>Not Used</option><option>Reset screenplay</option><option>Toggle Controls</option><option>Toggle Subtitles</option></select>';
+	    td.innerHTML = '<select style="font-size:30px; text-align:right; padding:0px 10px 0px 0px" class="viewItem" id ="viewItem_2_1" name="greenButton"><option>Not Used</option><option>Reset screenplay</option><option>Toggle Controls</option></select>';
 	    td = tr.insertCell(-1);
 	    td.innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
 	    tr = tbl.insertRow(-1);
 	    td = tr.insertCell(-1);
 	    td.appendChild(document.createTextNode('Yellow Button:'));
 	    td = tr.insertCell(-1);
-	    td.innerHTML = '<select style="font-size:30px; text-align:right; padding:0px 10px 0px 0px" class="viewItem" id ="viewItem_2_2" name="yellowButton"><option>Not Used</option><option>Reset screenplay</option><option>Toggle Controls</option><option>Toggle Subtitles</option></select>';
+	    td.innerHTML = '<select style="font-size:30px; text-align:right; padding:0px 10px 0px 0px" class="viewItem" id ="viewItem_2_2" name="yellowButton"><option>Not Used</option><option>Reset screenplay</option><option>Toggle Controls</option></select>';
 	    td = tr.insertCell(-1);
 	    td.innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
 	    tr = tbl.insertRow(-1);
 	    td = tr.insertCell(-1);
 	    td.appendChild(document.createTextNode('Blue Button:'));
 	    td = tr.insertCell(-1);
-	    td.innerHTML = '<select style="font-size:30px; text-align:right; padding:0px 10px 0px 0px" class="viewItem" id ="viewItem_2_3" name="blueButton"><option>Not Used</option><option>Reset screenplay</option><option>Toggle Controls</option><option>Toggle Subtitles</option></select>';
+	    td.innerHTML = '<select style="font-size:30px; text-align:right; padding:0px 10px 0px 0px" class="viewItem" id ="viewItem_2_3" name="blueButton"><option>Not Used</option><option>Reset screenplay</option><option>Toggle Controls</option></select>';
 	    td = tr.insertCell(-1);
 	    td.innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
 	    body.appendChild(tbl);
@@ -352,6 +352,9 @@ Prefs.prototype.clientSettings = function(){
 		currentColumn = 2
 		currentRow = 0
 		highlight("#viewItem_2_0")
+		dom.removeClass("#viewItem_2_0","viewItem");
+		dom.addClass("#viewItem_2_0","viewItem_Selected");
+		listboxItemfocus = true;
 		settingsItemfocus = true;
 	}
 	
@@ -359,6 +362,9 @@ Prefs.prototype.clientSettings = function(){
 		currentColumn = 2
 		currentRow = 1
 		highlight("#viewItem_2_1")
+		dom.removeClass("#viewItem_2_1","viewItem");
+		dom.addClass("#viewItem_2_1","viewItem_Selected");
+		listboxItemfocus = true;
 		settingsItemfocus = true;
 	}
 	
@@ -366,6 +372,9 @@ Prefs.prototype.clientSettings = function(){
 		currentColumn = 2
 		currentRow = 2
 		highlight("#viewItem_2_2")
+		dom.removeClass("#viewItem_2_2","viewItem");
+		dom.addClass("#viewItem_2_2","viewItem_Selected");
+		listboxItemfocus = true;
 		settingsItemfocus = true;
 	}
 	
@@ -373,6 +382,9 @@ Prefs.prototype.clientSettings = function(){
 		currentColumn = 2
 		currentRow = 3
 		highlight("#viewItem_2_3")
+		dom.removeClass("#viewItem_2_3","viewItem");
+		dom.addClass("#viewItem_2_3","viewItem_Selected");
+		listboxItemfocus = true;
 		settingsItemfocus = true;
 	}
 	
@@ -436,8 +448,13 @@ function navigation(event) {
 		settingsItemfocus = false;
 		for(var col = 0;col <= columnCount; col++)
 			for (var row = 0; row <= rowCount+1; row++)
+			{	
 				if (dom.hasClass("#viewItem_"+ col + "_" +row, "viewItem_highlight"))
 					dom.removeClass("#viewItem_"+ col + "_" +row, "viewItem_highlight");
+				if (dom.hasClass("#viewItem_"+ col + "_" +row, "viewItem_Selected"))
+					dom.removeClass("#viewItem_"+ col + "_" +row, "viewItem_Selected");
+				dom.addClass("#viewItem_"+ col + "_" +row, "viewItem")
+			}
 
 		if (homeFocus)
 		{	
