@@ -104,7 +104,7 @@ Prefs.prototype.clientSettings = function(){
 	dom.hide("#server");
 	dom.hide("#user");
 	dom.show("#homeLink");
-	dom.remove("#screenplaySettings");
+	self.clientSettingsClose()
 
 	this.navigation = dom.on("body","keydown",navigation)
 
@@ -453,7 +453,9 @@ function navigation(event) {
 					dom.removeClass("#viewItem_"+ col + "_" +row, "viewItem_highlight");
 				if (dom.hasClass("#viewItem_"+ col + "_" +row, "viewItem_Selected"))
 					dom.removeClass("#viewItem_"+ col + "_" +row, "viewItem_Selected");
-				dom.addClass("#viewItem_"+ col + "_" +row, "viewItem")
+				if ((col > 0) && !(col == 1 && row == 4))
+					if (!dom.hasClass("#viewItem_"+ col + "_" +row, "viewItem"))
+				        dom.addClass("#viewItem_"+ col + "_" +row, "viewItem")
 			}
 
 		if (homeFocus)
