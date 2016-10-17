@@ -7,12 +7,18 @@ function CollectionSummary() {
 	this.backdrops;
 	this.total = 0;
 	this.count = 0;
+	this.lostfocus;
 };
 
 CollectionSummary.prototype.close = function() {
 
 };
 
+CollectionSummary.prototype.close = function() {
+
+	dom.off("body","keydown", this.lostfocus);
+	
+}
 CollectionSummary.prototype.load = function(data, settings) {
 	data = data || {};	
 	settings = settings || {};
@@ -26,6 +32,8 @@ CollectionSummary.prototype.load = function(data, settings) {
 	dom.hide("#user");
 	dom.show("#details")
 	dom.show("#homeLink");
+
+	self.close()
 	
 	dom.html("#view", {
 		nodeName: "div",
@@ -61,7 +69,7 @@ CollectionSummary.prototype.load = function(data, settings) {
 		}]
 	});
 
-	dom.on("body", "keydown", lostFocus);
+	this.lostfocus = dom.on("body", "keydown", lostFocus);
 			
 	dom.on("#collection #all", "click", function() {
 		event.stopPropagation()

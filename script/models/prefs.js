@@ -106,6 +106,7 @@ Prefs.prototype.clientSettings = function(){
 	dom.show("#homeLink");
 	self.clientSettingsClose()
 
+
 	this.navigation = dom.on("body","keydown",navigation)
 
 	dom.html("#view", {
@@ -403,6 +404,10 @@ function navigation(event) {
 	    if (listboxItemfocus)
 	    	return
 
+/*	    	playerpopup.show({
+	    		duration: 1000,
+	    		text: event.which
+	    	});*/	
 	    switch (event.which) {
 			case keys.KEY_LEFT: 
 			    currentRow = 0;

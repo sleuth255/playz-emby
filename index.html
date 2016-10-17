@@ -122,6 +122,8 @@
 			    	}
 				if (event.state) {
 					collection.close();
+					summary.close();
+					home.close();
 					switch(event.state.action) {
 						case "home":
 							home.load();
@@ -149,7 +151,9 @@
 				history.pushState({
 					action: "home"
 				}, "home");							
-				collection.close();			
+				collection.close();	
+				summary.close();
+				home.close();
 				home.load();
 			});
 

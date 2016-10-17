@@ -7,8 +7,14 @@ function Home() {
 	this.backdrops;
 	this.total = 0;
 	this.count = 0;
+	this.lostfocus
 };
 
+Home.prototype.close = function(){
+
+	dom.off("body","keydown", this.lostfocus);
+	
+}
 Home.prototype.load = function() {
 	var self = this;
 
@@ -25,6 +31,8 @@ Home.prototype.load = function() {
 	    prefs.clientSettingsClose();
 	}
 	   
+	dom.off("body","keydown", this.lostfocus);
+
 	dom.html("#view", {
 		nodeName: "div",
 		className: "home-view",
@@ -36,17 +44,19 @@ Home.prototype.load = function() {
 		}]
 	});
 
-	dom.on("body", "keydown", lostFocus);
+	this.lostfocus = dom.on("body", "keydown", lostFocus);
 			
 	dom.delegate("#home", "a.latest-item", "click", function(event) {
 		event.preventDefault();
 		event.stopPropagation();
+		self.close()
 		dom.dispatchCustonEvent(document, "mediaItemSelected", event.delegateTarget.dataset);
 	});	
 
 	dom.delegate("#home", "a.latest-items-more", "click", function(event) {
 		event.preventDefault();
 		event.stopPropagation();
+		self.close()
 		dom.dispatchCustonEvent(document, "userViewMoreSelected", event.delegateTarget.dataset);
 	});	
 
@@ -187,11 +197,13 @@ Home.prototype.load = function() {
 		dom.on(".user-views-item-settings", "click", function(event) {
 			event.stopPropagation()
 			event.preventDefault()
+			self.close()
 			dom.dispatchCustonEvent(document, "userPrefsSelected", this.dataset);
 		});
 		dom.on(".user-views-item", "click", function(event) {
 			event.stopPropagation()
 			event.preventDefault()
+			self.close()
 			dom.dispatchCustonEvent(document, "userViewSelected", this.dataset);
 		});		
 	}

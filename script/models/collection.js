@@ -16,11 +16,13 @@ function Collection() {
 	this.parentId;
 	this.parent;
 	this.data;
+	this.lostfocus;
 };
 
 Collection.prototype.close = function() {
 	dom.remove("#collectionIndex");
 	dom.off("#view", "scroll", this.scroll);
+	dom.off("body","keydown", this.lostfocus);
 };
 
 Collection.prototype.load = function(data, settings) {
@@ -51,6 +53,8 @@ Collection.prototype.load = function(data, settings) {
 	dom.show("#details")
 	dom.show("#homeLink");
 	
+	self.close();
+
 	dom.html("#view", {
 		nodeName: "div",
 		className: "collection-view",
@@ -313,20 +317,18 @@ Collection.prototype.load = function(data, settings) {
 		}]
 	})
 	
-	dom.on("body", "keydown", lostFocus);
+	this.lostfocus = dom.on("body", "keydown", lostFocus);
 	this.scroll = dom.on("#view", "scroll", scrolling);
 			
 	dom.delegate("#collection", "a.latest-item", "click", function(event) {
 		event.stopPropagation()
 		event.preventDefault()
-		self.close();
 		dom.dispatchCustonEvent(document, "mediaItemSelected", event.delegateTarget.dataset);
 	});	
 
 	dom.delegate("#collection", "a.latest-items-more", "click", function(event) {
 		event.stopPropagation()
 		event.preventDefault()
-		self.close();
 		dom.dispatchCustonEvent(document, "userViewMoreSelected", event.delegateTarget.dataset);
 	});	
 
