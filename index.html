@@ -52,6 +52,7 @@
 				history.pushState({
 					action: "home"
 				}, "home");
+				user.close();
 				dom.remove("#home")
 				home.load();
 			});

@@ -8,8 +8,16 @@ var idx = 0;
 function User() {
 	this.current = "emby.settings.current.user";	
 	this.users;
+	this.lostfocus;
+	
 }
 
+User.prototype.close = function(){
+	dom.off("body","keydown", this.lostfocus);
+	dom.hide("#userLoginSettings");
+	dom.remove("#userLoginSettings");
+
+}
 User.prototype.load = function(data) {
 	this.users = data;
 			
@@ -233,7 +241,7 @@ User.prototype.login = function() {
 		dom.addClass(this, "key-user-selected");
 	});
 	dom.on("#keyForm", "submit", enterPress, false);
-	dom.on("body", "keydown", lostFocus);	
+	this.lostfocus = dom.on("body", "keydown", lostFocus);	
 	dom.on(".key-user", "keydown", function(event) {
 		switch (event.which) {
 		case keys.KEY_LEFT: 
@@ -261,6 +269,8 @@ User.prototype.login = function() {
 	
 	
 	function lostFocus(event) {
+		if (dom.exists("#screenplaySettings") || dom.exists("#player"))
+			return;
 		if (event.target.tagName != "A" && event.target.tagName != "INPUT") {
 			keys.focus("#" + dom.data("#" + keys.id, "lastFocus"));
 		}
@@ -365,8 +375,3 @@ User.prototype.login = function() {
 	}	
 };
 
-User.prototype.close = function(index) {
-	keys.close();
-	dom.hide("#userLoginSettings");
-	dom.remove("#userLoginSettings");
-};
